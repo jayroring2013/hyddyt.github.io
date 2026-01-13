@@ -1,5 +1,5 @@
 /* ----------------------------------
-   Crunchyroll-style Transitions & FX
+   Crunchyroll / Premier League FX
    ---------------------------------- */
 
 :root {
@@ -8,7 +8,7 @@
   --border: #1f2233;
 }
 
-/* Smooth global transitions */
+/* Smooth transitions */
 * {
   transition: background-color 0.25s ease,
               color 0.25s ease,
@@ -16,7 +16,7 @@
               box-shadow 0.25s ease;
 }
 
-/* ---------------- Table Styling ---------------- */
+/* Table container */
 .table-container {
   overflow-x: auto;
   background: #0f1220;
@@ -24,6 +24,7 @@
   border: 1px solid var(--border);
 }
 
+/* Table */
 #rankingTable {
   width: 100%;
   border-collapse: collapse;
@@ -34,23 +35,22 @@
 }
 
 #rankingTable th {
-  text-align: left;
   padding: 14px 16px;
   font-size: 13px;
-  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: #9aa0b4;
+  text-align: left;
 }
 
 #rankingTable td {
   padding: 14px 16px;
   border-top: 1px solid var(--border);
-  font-size: 14px;
 }
 
-/* ---------------- Row Hover Effect ---------------- */
+/* Hover effects */
 #rankingTable tbody tr {
   cursor: pointer;
+  animation: fadeUp 0.4s ease forwards;
 }
 
 #rankingTable tbody tr:hover {
@@ -58,12 +58,7 @@
   transform: scale(1.01);
 }
 
-#rankingTable tbody tr:hover td:first-child {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-/* ---------------- Rank Highlight ---------------- */
+/* Top 3 highlight */
 #rankingTable tbody tr:nth-child(1) td:first-child,
 #rankingTable tbody tr:nth-child(2) td:first-child,
 #rankingTable tbody tr:nth-child(3) td:first-child {
@@ -71,17 +66,12 @@
   font-weight: 700;
 }
 
-/* ---------------- Title Emphasis ---------------- */
-#rankingTable td:nth-child(2) {
-  font-weight: 600;
-}
-
-/* ---------------- Click Animation ---------------- */
+/* Click effect */
 #rankingTable tbody tr:active {
   transform: scale(0.98);
 }
 
-/* ---------------- Fade-in Animation ---------------- */
+/* Fade animation */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -93,11 +83,7 @@
   }
 }
 
-#rankingTable tbody tr {
-  animation: fadeUp 0.4s ease forwards;
-}
-
-/* ---------------- Mobile Tweaks ---------------- */
+/* Mobile */
 @media (max-width: 600px) {
   #rankingTable th,
   #rankingTable td {
