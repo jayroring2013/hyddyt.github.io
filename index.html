@@ -8,73 +8,53 @@
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Effects -->
+  <!-- Effects CSS -->
   <link rel="stylesheet" href="lnrank-effects.css">
 
-  <!-- SheetJS (Excel reader) -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
-
   <style>
-    :root {
-      --bg: #0b0d12;
-      --text: #ffffff;
-      --muted: #9aa0b4;
-      --accent: #ff8a00;
-    }
-
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      padding: 40px;
+      background: #0b0d17;
+      font-family: "Inter", sans-serif;
+      color: #e6e8f0;
     }
 
-    header {
-      background: rgba(11, 13, 18, 0.9);
-      border-bottom: 1px solid #1f2233;
+    h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: 700;
     }
 
-    .nav {
-      max-width: 1200px;
+    .table-container {
+      max-width: 1100px;
       margin: auto;
-      padding: 16px;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent);
     }
 
-    .section {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 16px;
+    .title-cell {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
-    .section-title {
-      font-size: 24px;
-      margin-bottom: 16px;
+    .title-cell img {
+      width: 42px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #111;
     }
 
-    .rank-cell {
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    footer {
-      margin: 60px 0 20px;
-      text-align: center;
-      color: var(--muted);
+    .votes {
+      font-weight: 600;
+      color: #ff8a00;
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <div class="nav">LN Rank</div>
-</header>
-
-<section class="section">
-  <h2 class="section-title">Overall Ranking</h2>
+  <h1>📚 Light Novel Rankings</h1>
 
   <div class="table-container">
     <table id="rankingTable">
@@ -91,48 +71,41 @@
       <tbody></tbody>
     </table>
   </div>
-</section>
 
-<footer>© 2026 Light Novel Rankings</footer>
+  <!-- 1️⃣ SheetJS -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
-<script>
-(async () => {
-  try {
-    console.log("Fetching Excel...");
-    const res = await fetch("./BXHLN.xlsx");
-    console.log("Fetch status:", res.status);
+  <!-- 2️⃣ Excel Loader -->
+  <script>
+    (async () => {
+      try {
+        const response = await fetch("./BXHLN.xlsx");
+        const buffer = await response.arrayBuffer();
 
-    const buf = await res.arrayBuffer();
-    console.log("ArrayBuffer loaded");
+        const workbook = XLSX.read(buffer, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    const workbook = XLSX.read(buf, { type: "array" });
-    console.log("Workbook:", workbook.SheetNames);
+        const tbody = document.querySelector("#rankingTable tbody");
 
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    console.log("Rows:", rows);
+        rows.slice(1).forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row[0] ?? ""}</td>
+            <td>${row[1] ?? ""}</td>
+            <td class="votes">${row[2] ?? ""}</td>
+            <td>${row[3] ?? ""}</td>
+            <td>${row[4] ?? ""}</td>
+            <td>${row[5] ?? ""}</td>
+          `;
+          tbody.appendChild(tr);
+        });
 
-    const tbody = document.querySelector("#rankingTable tbody");
-
-    rows.slice(1).forEach(r => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${r[0]}</td>
-        <td>${r[1]}</td>
-        <td>${r[2]}</td>
-        <td>${r[3]}</td>
-        <td>${r[4]}</td>
-        <td>${r[5]}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-  } catch (e) {
-    console.error("Excel load failed:", e);
-  }
-})();
-</script>
+      } catch (err) {
+        console.error("Excel load failed:", err);
+      }
+    })();
+  </script>
 
 </body>
 </html>
