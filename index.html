@@ -1,119 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Light Novel Rankings</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Light Novel Rankings</title>
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- SheetJS must be loaded first -->
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
-  <!-- Effects CSS -->
-  <link rel="stylesheet" href="lnrank-effects.css">
-
-  <!-- SheetJS library -->
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 40px;
-      background: #0b0d17;
-      font-family: "Inter", sans-serif;
-      color: #e6e8f0;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .table-container {
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .title-cell {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .title-cell img {
-      width: 42px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-      background: #111;
-    }
-
-    .votes {
-      font-weight: 600;
-      color: #ff8a00;
-    }
-  </style>
+<style>
+  body { font-family: sans-serif; background: #0b0d17; color: #e6e8f0; padding: 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #555; padding: 8px; text-align: left; }
+  .votes { color: #ff8a00; font-weight: 600; }
+</style>
 </head>
-
 <body>
 
-  <h1>📚 Light Novel Rankings</h1>
-
-  <div class="table-container">
-    <table id="rankingTable">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Title</th>
-          <th>Votes</th>
-          <th>Publisher</th>
-          <th>Volumes</th>
-          <th>Publish Year</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<h1>📚 Light Novel Rankings</h1>
+<table id="rankingTable">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Title</th>
+      <th>Votes</th>
+      <th>Publisher</th>
+      <th>Volumes</th>
+      <th>Publish Year</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <script>
-  window.onload = async () => {
-    try {
-      if (typeof XLSX === 'undefined') {
-        throw new Error("SheetJS library failed to load.");
-      }
+window.onload = async () => {
+  if (typeof XLSX === 'undefined') {
+    console.error("XLSX is not defined! SheetJS failed to load.");
+    return;
+  }
 
-      // Replace this with your raw GitHub URL
-      const githubExcelUrl = "https://raw.githubusercontent.com/jayroring2013/hyddyt.github.io/5c34b925048e87b3cb154f249db399dcc15ca63c/BXHLN.xlsx";
+  try {
+    const githubExcelUrl = "https://raw.githubusercontent.com/jayroring2013/hyddyt.github.io/5c34b925048e87b3cb154f249db399dcc15ca63c/BXHLN.xlsx"; // <-- Replace this
+    const res = await fetch(githubExcelUrl);
+    if (!res.ok) throw new Error("Failed to fetch Excel file");
 
-      const response = await fetch(githubExcelUrl);
-      if (!response.ok) throw new Error("Failed to fetch Excel file from GitHub");
+    const buffer = await res.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: "array" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-      const buffer = await response.arrayBuffer();
+    const tbody = document.querySelector("#rankingTable tbody");
+    rows.slice(1).forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row[0] ?? ""}</td>
+        <td>${row[1] ?? ""}</td>
+        <td class="votes">${row[2] ?? ""}</td>
+        <td>${row[3] ?? ""}</td>
+        <td>${row[4] ?? ""}</td>
+        <td>${row[5] ?? ""}</td>
+      `;
+      tbody.appendChild(tr);
+    });
 
-      const workbook = XLSX.read(buffer, { type: "array" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-      const tbody = document.querySelector("#rankingTable tbody");
-
-      rows.slice(1).forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${row[0] ?? ""}</td>
-          <td>${row[1] ?? ""}</td>
-          <td class="votes">${row[2] ?? ""}</td>
-          <td>${row[3] ?? ""}</td>
-          <td>${row[4] ?? ""}</td>
-          <td>${row[5] ?? ""}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-    } catch (err) {
-      console.error("Excel load failed:", err);
-    }
-  };
+  } catch (err) {
+    console.error("Excel load failed:", err);
+  }
+};
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
