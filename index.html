@@ -1,9 +1,224 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Light Novel Rankings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --card: #151824;
+      --accent: #ff8a00;
+      --text: #ffffff;
+      --muted: #9aa0b4;
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ---------------- Header ---------------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 13, 18, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1f2233;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* ---------------- Hero ---------------- */
+    .hero {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 600px;
+    }
+
+    /* ---------------- Ranking Grid ---------------- */
+    .section {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(135deg, #333, #555);
+    }
+
+    .card-body {
+      padding: 10px;
+    }
+
+    .rank {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 6px 0;
+      line-height: 1.3;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ---------------- Footer ---------------- */
+    footer {
+      margin-top: 60px;
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid #1f2233;
+    }
+
+    /* ---------------- Responsive ---------------- */
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
 <body>
-  <h1>YOUR NAME</h1>
-  <p>Welcome to my website!</p>
-  <img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif" />
-</body>
 
+  <!-- Header -->
+  <header>
+    <div class="nav">
+      <div class="logo">LN Rank</div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Top Rankings</a>
+        <a href="#">Genres</a>
+        <a href="#">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Top Light Novels This Season</h1>
+    <p>Discover the highest-ranked light novels based on community scores, popularity, and reviews.</p>
+  </section>
+
+  <!-- Rankings -->
+  <section class="section">
+    <h2 class="section-title">Overall Ranking</h2>
+    <div class="grid">
+      <!-- Example Card -->
+      <div class="card">
+        <div class="cover"></div>
+        <div class="card-body">
+          <div class="rank">#1</div>
+          <div class="title">That Time I Got Reincarnated as a Slime</div>
+          <div class="meta">Fantasy • 9.4 ★</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cover"></div>
+        <div class="card-body">
+          <div class="rank">#2</div>
+          <div class="title">Classroom of the Elite</div>
+          <div class="meta">Psychological • 9.2 ★</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cover"></div>
+        <div class="card-body">
+          <div class="rank">#3</div>
+          <div class="title">Mushoku Tensei</div>
+          <div class="meta">Isekai • 9.1 ★</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2026 Light Novel Ranking • Built with GitHub Pages
+  </footer>
+
+</body>
 </html>
