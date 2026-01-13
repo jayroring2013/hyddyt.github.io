@@ -72,40 +72,42 @@
     </table>
   </div>
 
-  <!-- 1️⃣ SheetJS -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
-
-  <!-- 2️⃣ Excel Loader -->
-  <script>
-    (async () => {
-      try {
-        const response = await fetch("./BXHLN.xlsx");
-        const buffer = await response.arrayBuffer();
-
-        const workbook = XLSX.read(buffer, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-        const tbody = document.querySelector("#rankingTable tbody");
-
-        rows.slice(1).forEach(row => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${row[0] ?? ""}</td>
-            <td>${row[1] ?? ""}</td>
-            <td class="votes">${row[2] ?? ""}</td>
-            <td>${row[3] ?? ""}</td>
-            <td>${row[4] ?? ""}</td>
-            <td>${row[5] ?? ""}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-      } catch (err) {
-        console.error("Excel load failed:", err);
+<script>
+  // Wrap everything in a window load event
+  window.onload = async () => {
+    try {
+      // Check if XLSX exists just to be safe
+      if (typeof XLSX === 'undefined') {
+        throw new Error("SheetJS library failed to load.");
       }
-    })();
-  </script>
+
+      const response = await fetch("./BXHLN.xlsx");
+      const buffer = await response.arrayBuffer();
+
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      const tbody = document.querySelector("#rankingTable tbody");
+
+      rows.slice(1).forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row[0] ?? ""}</td>
+          <td>${row[1] ?? ""}</td>
+          <td class="votes">${row[2] ?? ""}</td>
+          <td>${row[3] ?? ""}</td>
+          <td>${row[4] ?? ""}</td>
+          <td>${row[5] ?? ""}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    } catch (err) {
+      console.error("Excel load failed:", err);
+    }
+  };
+</script>
 
 </body>
 </html>
