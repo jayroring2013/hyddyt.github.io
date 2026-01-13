@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Light Novel Rankings</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="lnrank-effects.css">
   <style>
     :root {
       --bg: #0b0d12;
@@ -181,40 +180,53 @@
     <p>Discover the highest-ranked light novels based on community scores, popularity, and reviews.</p>
   </section>
 
-  <!-- Rankings -->
+    <!-- Rankings -->
   <section class="section">
     <h2 class="section-title">Overall Ranking</h2>
-    <div class="grid">
-      <!-- Example Card -->
-      <div class="card">
-        <div class="cover"></div>
-        <div class="card-body">
-          <div class="rank">#1</div>
-          <div class="title">That Time I Got Reincarnated as a Slime</div>
-          <div class="meta">Fantasy • 9.4 ★</div>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="cover"></div>
-        <div class="card-body">
-          <div class="rank">#2</div>
-          <div class="title">Classroom of the Elite</div>
-          <div class="meta">Psychological • 9.2 ★</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="cover"></div>
-        <div class="card-body">
-          <div class="rank">#3</div>
-          <div class="title">Mushoku Tensei</div>
-          <div class="meta">Isekai • 9.1 ★</div>
-        </div>
-      </div>
-
+    <div class="table-container">
+      <table id="rankingTable">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be injected here -->
+        </tbody>
+      </table>
     </div>
   </section>
+
+  <script>
+    // Replace this URL with your published Google Sheet CSV link
+    const SHEET_CSV_URL = "YOUR_GOOGLE_SHEET_CSV_URL_HERE";
+
+    fetch(SHEET_CSV_URL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("
+").slice(1); // skip header
+        const tbody = document.querySelector("#rankingTable tbody");
+
+        rows.forEach(row => {
+          if (!row.trim()) return;
+          const cols = row.split(",");
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>#${cols[0]}</td>
+            <td>${cols[1]}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]} ★</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
 
   <!-- Footer -->
   <footer>
