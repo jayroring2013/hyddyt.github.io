@@ -11,6 +11,9 @@
   <!-- Effects CSS -->
   <link rel="stylesheet" href="lnrank-effects.css">
 
+  <!-- SheetJS library -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -73,15 +76,18 @@
   </div>
 
 <script>
-  // Wrap everything in a window load event
   window.onload = async () => {
     try {
-      // Check if XLSX exists just to be safe
       if (typeof XLSX === 'undefined') {
         throw new Error("SheetJS library failed to load.");
       }
 
-      const response = await fetch("./BXHLN.xlsx");
+      // Replace this with your raw GitHub URL
+      const githubExcelUrl = "https://raw.githubusercontent.com/jayroring2013/hyddyt.github.io/5c34b925048e87b3cb154f249db399dcc15ca63c/BXHLN.xlsx";
+
+      const response = await fetch(githubExcelUrl);
+      if (!response.ok) throw new Error("Failed to fetch Excel file from GitHub");
+
       const buffer = await response.arrayBuffer();
 
       const workbook = XLSX.read(buffer, { type: "array" });
