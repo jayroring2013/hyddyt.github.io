@@ -5,40 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Light Novel Rankings</title>
 
-  <!-- Google Font -->
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Effects & transitions -->
+  <!-- Effects -->
   <link rel="stylesheet" href="lnrank-effects.css">
 
-  <!-- Base layout styles -->
+  <!-- SheetJS (Excel reader) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
+
   <style>
     :root {
       --bg: #0b0d12;
-      --card: #151824;
       --text: #ffffff;
       --muted: #9aa0b4;
       --accent: #ff8a00;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
+      margin: 0;
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
       background: rgba(11, 13, 18, 0.9);
-      backdrop-filter: blur(10px);
       border-bottom: 1px solid #1f2233;
     }
 
@@ -46,14 +38,8 @@
       max-width: 1200px;
       margin: auto;
       padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-weight: 700;
       font-size: 22px;
+      font-weight: 700;
       color: var(--accent);
     }
 
@@ -68,110 +54,73 @@
       margin-bottom: 16px;
     }
 
-    /* Premier League style additions */
     .rank-cell {
       font-weight: 700;
       color: var(--accent);
-      width: 60px;
-    }
-
-    .club-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .club-logo {
-      width: 36px;
-      height: 54px;
-      object-fit: cover;
-      border-radius: 4px;
-      background: #222;
-    }
-
-    .club-name {
-      font-weight: 600;
-    }
-
-    .score-cell {
-      font-weight: 700;
-      text-align: center;
     }
 
     footer {
-      margin-top: 60px;
-      padding: 24px;
+      margin: 60px 0 20px;
       text-align: center;
       color: var(--muted);
-      border-top: 1px solid #1f2233;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="nav">
-      <div class="logo">LN Rank</div>
-    </div>
-  </header>
+<header>
+  <div class="nav">LN Rank</div>
+</header>
 
-  <!-- Ranking Table -->
-  <section class="section">
-    <h2 class="section-title">Overall Ranking</h2>
+<section class="section">
+  <h2 class="section-title">Overall Ranking</h2>
 
-    <div class="table-container">
-      <table id="rankingTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Light Novel</th>
-            <th>Genre</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Rows injected here -->
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="table-container">
+    <table id="rankingTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Title</th>
+          <th>Votes</th>
+          <th>Publisher</th>
+          <th>Volumes</th>
+          <th>Publish Year</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
 
-  <footer>
-    © 2026 Light Novel Rankings
-  </footer>
+<footer>© 2026 Light Novel Rankings</footer>
 
-  <!-- Google Sheet CSV Loader -->
-  <script>
-    const SHEET_CSV_URL = "YOUR_GOOGLE_SHEET_CSV_URL_HERE";
+<script>
+  fetch("rankings.xlsx")
+    .then(res => res.arrayBuffer())
+    .then(data => {
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    fetch(SHEET_CSV_URL)
-      .then(res => res.text())
-      .then(csv => {
-        const rows = csv.split("\\n").slice(1);
-        const tbody = document.querySelector("#rankingTable tbody");
+      const tbody = document.querySelector("#rankingTable tbody");
 
-        rows.forEach(row => {
-          if (!row.trim()) return;
+      rows.slice(1).forEach(row => {
+        if (row.length < 6) return;
 
-          const cols = row.match(/(\"[^\"]+\"|[^,]+)/g);
-          if (!cols || cols.length < 5) return;
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td class="rank-cell">${cols[0]}</td>
-            <td class="club-cell">
-              <img src="${cols[4]}" class="club-logo">
-              <span class="club-name">${cols[1]}</span>
-            </td>
-            <td>${cols[2]}</td>
-            <td class="score-cell">${cols[3]}</td>
-          `;
-          tbody.appendChild(tr);
-        });
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="rank-cell">${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+          <td>${row[4]}</td>
+          <td>${row[5]}</td>
+        `;
+        tbody.appendChild(tr);
       });
-  </script>
+    });
+</script>
 
 </body>
 </html>
