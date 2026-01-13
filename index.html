@@ -95,31 +95,43 @@
 
 <footer>© 2026 Light Novel Rankings</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 <script>
-  fetch("BXHLN.xlsx")
-    .then(res => res.arrayBuffer())
-    .then(data => {
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+(async () => {
+  try {
+    console.log("Fetching Excel...");
+    const res = await fetch("./rankings.xlsx");
+    console.log("Fetch status:", res.status);
 
-      const tbody = document.querySelector("#rankingTable tbody");
+    const buf = await res.arrayBuffer();
+    console.log("ArrayBuffer loaded");
 
-      rows.slice(1).forEach(row => {
-        if (row.length < 6) return;
+    const workbook = XLSX.read(buf, { type: "array" });
+    console.log("Workbook:", workbook.SheetNames);
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="rank-cell">${row[0]}</td>
-          <td>${row[1]}</td>
-          <td>${row[2]}</td>
-          <td>${row[3]}</td>
-          <td>${row[4]}</td>
-          <td>${row[5]}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    console.log("Rows:", rows);
+
+    const tbody = document.querySelector("#rankingTable tbody");
+
+    rows.slice(1).forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r[0]}</td>
+        <td>${r[1]}</td>
+        <td>${r[2]}</td>
+        <td>${r[3]}</td>
+        <td>${r[4]}</td>
+        <td>${r[5]}</td>
+      `;
+      tbody.appendChild(tr);
     });
+
+  } catch (e) {
+    console.error("Excel load failed:", e);
+  }
+})();
 </script>
 
 </body>
