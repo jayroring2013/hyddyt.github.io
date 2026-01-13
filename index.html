@@ -96,7 +96,7 @@
 <footer>© 2026 Light Novel Rankings</footer>
 
 <script>
-  fetch("rankings.xlsx")
+  fetch("BXHLN.xlsx")
     .then(res => res.arrayBuffer())
     .then(data => {
       const workbook = XLSX.read(data, { type: "array" });
