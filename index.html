@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,22 +36,8 @@
             }
         }
     </script>
-    
-    <script>
-        // Apply theme immediately to prevent flash
-        (function() {
-            const saved = localStorage.getItem('lidex-theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved || (prefersDark ? 'dark' : 'light');
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.add('light');
-            }
-        })();
-    </script>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
+<body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
     
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
@@ -257,11 +243,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="assets/js/config.js"></script>      <!-- Config FIRST -->
-    <script src="assets/js/supabase.js"></script>    <!-- Supabase client SECOND -->
-    <script src="assets/js/api.js"></script>         <!-- API THIRD -->
-    <script src="assets/js/theme.js"></script>       <!-- Theme FOURTH -->
-    <script src="assets/js/nav.js"></script>         <!-- Nav FIFTH -->
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/nav.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
