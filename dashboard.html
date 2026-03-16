@@ -43,6 +43,20 @@
             }
         }
     </script>
+    
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const saved = localStorage.getItem('lidex-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.add('light');
+            }
+        })();
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
     
