@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Test - LiDex</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #0f172a; color: #f8fafc; }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .info { color: #6366f1; }
+        pre { background: #1e293b; padding: 15px; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Supabase Connection Test</h1>
+    <div id="results"></div>
+
+    <script src="assets/js/config.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+
+        async function runTests() {
+            log('=== Starting Connection Tests ===', 'info');
+            
+            // Test 1: Config
+            log('\n1. Checking Configuration...');
+            if (typeof SUPABASE_CONFIG === 'undefined') {
+                log('   ❌ SUPABASE_CONFIG not defined', 'error');
+                log('   → GitHub Actions workflow may have failed', 'error');
+                return;
+            }
+            log('   ✅ Config loaded', 'success');
+            log('   URL: ' + SUPABASE_CONFIG.URL, 'info');
+            
+            // Test 2: Initialize Client
+            log('\n2. Initializing Supabase Client...');
+            try {
+                const { createClient } = supabase;
+                const db = createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.ANON_KEY);
+                log('   ✅ Client created', 'success');
+                
+                // Test 3: Connect to Database
+                log('\n3. Testing Database Connection...');
+                const { data, error } = await db.from('series').select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    log('   ❌ Connection failed', 'error');
+                    log('   Error: ' + error.message, 'error');
+                    log('   → Check RLS policies in Supabase', 'error');
+                } else {
+                    log('   ✅ Connection successful!', 'success');
+                }
+                
+                // Test 4: Fetch Data
+                log('\n4. Fetching Sample Data...');
+                const {  series, error: seriesError } = await db.from('series').select('id, title, item_type').limit(5);
+                
+                if (seriesError) {
+                    log('   ❌ Failed to fetch series', 'error');
+                    log('   Error: ' + seriesError.message, 'error');
+                } else {
+                    log('   ✅ Fetched ' + series.length + ' series', 'success');
+                    log('\n   Sample Series:', 'info');
+                    series.forEach(s => {
+                        log(`   - [${s.id}] ${s.title} (${s.item_type})`, 'info');
+                    });
+                }
+                
+                // Test 5: Check Other Tables
+                log('\n5. Checking Other Tables...');
+                const tables = ['anime_meta', 'manga_meta', 'novel_votes'];
+                for (const table of tables) {
+                    const { count, error } = await db.from(table).select('*', { count: 'exact', head: true });
+                    if (error) {
+                        log(`   ❌ ${table}: ${error.message}`, 'error');
+                    } else {
+                        log(`   ✅ ${table}: ${count || 0} rows`, 'success');
+                    }
+                }
+                
+            } catch (e) {
+                log('   ❌ Unexpected error: ' + e.message, 'error');
+            }
+            
+            log('\n=== Tests Complete ===', 'info');
+        }
+        
+        runTests();
+    </script>
+</body>
+</html>
