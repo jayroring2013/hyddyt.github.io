@@ -29,9 +29,12 @@ jobs:
 
       - name: Inject Supabase Config
         run: |
-          sed -i 's|{{SUPABASE_URL}}|${{ secrets.SUPABASE_URL }}|g' assets/js/config.js.template
-          sed -i 's|{{SUPABASE_ANON_KEY}}|${{ secrets.SUPABASE_ANON_KEY }}|g' assets/js/config.js.template
-          mv assets/js/config.js.template assets/js/config.js
+          cat > assets/js/config.js << EOF
+          const SUPABASE_CONFIG = {
+              SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
+              SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}'
+          };
+          EOF
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
