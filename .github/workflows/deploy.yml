@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:  # ← This allows manual trigger
+  workflow_dispatch:  # Allows manual trigger
 
 permissions:
   contents: read
@@ -21,42 +21,101 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout repository
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Step 2: Setup GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Debug - Show Secret Names
+      # Step 3: Verify Secrets Exist
+      - name: Verify Supabase Secrets
         run: |
-          echo "Checking secrets..."
+          echo "🔍 Verifying secrets..."
           if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
-            echo "❌ SUPABASE_URL is empty or not set"
+            echo "❌ ERROR: SUPABASE_URL secret is not set"
             exit 1
           else
             echo "✅ SUPABASE_URL is set"
           fi
           if [ -z "${{ secrets.SUPABASE_ANON_KEY }}" ]; then
-            echo "❌ SUPABASE_ANON_KEY is empty or not set"
+            echo "❌ ERROR: SUPABASE_ANON_KEY secret is not set"
             exit 1
           else
             echo "✅ SUPABASE_ANON_KEY is set"
           fi
 
+      # Step 4: Inject Supabase Configuration
       - name: Inject Supabase Config
         run: |
-          echo "Injecting configuration..."
+          echo "📝 Creating config.js from template..."
+          
+          # Check if template exists
+          if [ ! -f "assets/js/config.js.template" ]; then
+            echo "❌ ERROR: config.js.template not found"
+            exit 1
+          fi
+          
+          # Copy template to config.js
           cp assets/js/config.js.template assets/js/config.js
+          
+          # Inject secrets using sed
           sed -i 's|{{SUPABASE_URL}}|${{ secrets.SUPABASE_URL }}|g' assets/js/config.js
           sed -i 's|{{SUPABASE_ANON_KEY}}|${{ secrets.SUPABASE_ANON_KEY }}|g' assets/js/config.js
-          echo "Configuration injected successfully"
+          
+          echo "✅ Configuration injected successfully"
+          echo ""
+          echo "--- Generated config.js contents ---"
           cat assets/js/config.js
+          echo ""
+          echo "------------------------------------"
 
+      # Step 5: Verify config.js was generated
+      - name: Verify Config Generation
+        run: |
+          echo "🔍 Verifying config.js was generated..."
+          if [ ! -f "assets/js/config.js" ]; then
+            echo "❌ ERROR: config.js was not created"
+            exit 1
+          fi
+          
+          # Check if placeholders were replaced
+          if grep -q "{{SUPABASE_URL}}" assets/js/config.js; then
+            echo "❌ ERROR: SUPABASE_URL placeholder was not replaced"
+            exit 1
+          else
+            echo "✅ SUPABASE_URL placeholder replaced"
+          fi
+          
+          if grep -q "{{SUPABASE_ANON_KEY}}" assets/js/config.js; then
+            echo "❌ ERROR: SUPABASE_ANON_KEY placeholder was not replaced"
+            exit 1
+          else
+            echo "✅ SUPABASE_ANON_KEY placeholder replaced"
+          fi
+          
+          echo "✅ Config verification passed"
+
+      # Step 6: List all files (for debugging)
+      - name: List Deployed Files
+        run: |
+          echo "📁 Files to be deployed:"
+          find . -type f -name "*.html" -o -name "*.js" -o -name "*.css" | head -50
+
+      # Step 7: Upload artifact for GitHub Pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
+      # Step 8: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Step 9: Deployment complete notification
+      - name: Deployment Complete
+        run: |
+          echo "🎉 Deployment completed successfully!"
+          echo "📍 Site URL: ${{ steps.deployment.outputs.page_url }}"
