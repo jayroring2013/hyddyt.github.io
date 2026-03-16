@@ -243,10 +243,11 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="assets/js/supabase.js"></script>
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/theme.js"></script>
-    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/config.js"></script>      <!-- Config FIRST -->
+    <script src="assets/js/supabase.js"></script>    <!-- Supabase client SECOND -->
+    <script src="assets/js/api.js"></script>         <!-- API THIRD -->
+    <script src="assets/js/theme.js"></script>       <!-- Theme FOURTH -->
+    <script src="assets/js/nav.js"></script>         <!-- Nav FIFTH -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
