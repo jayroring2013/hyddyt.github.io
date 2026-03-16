@@ -5,6 +5,6 @@
  */
 
 const SUPABASE_CONFIG = {
-    SUPABASE_URL: '{{SUPABASE_URL}}',
-    SUPABASE_ANON_KEY: '{{SUPABASE_ANON_KEY}}'
+    url: '{{SUPABASE_URL}}',
+    anonKey: '{{SUPABASE_ANON_KEY}}'
 };
