@@ -405,5 +405,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('🔍 === END DEBUG ===');
 });
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>
+    if (/mobile/i.test(navigator.userAgent)) {
+        eruda.init();
+    }
+</script>
 </body>
 </html>
