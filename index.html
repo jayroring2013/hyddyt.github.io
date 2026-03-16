@@ -352,5 +352,12 @@
             console.log('Search results:', data);
         });
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('SUPABASE_CONFIG:', typeof SUPABASE_CONFIG);
+    console.log('db:', typeof window.db);
+    console.log('api:', typeof window.api);
+});
+</script>
 </body>
 </html>
