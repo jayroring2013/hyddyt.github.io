@@ -21,8 +21,6 @@ class ThemeManager {
     // Initialize theme system
     init() {
         this.loadSavedTheme();
-        this.setupToggleButton();
-        this.setupSystemPreferenceListener();
     }
 
     // Load saved theme from localStorage
@@ -30,10 +28,8 @@ class ThemeManager {
         const savedTheme = localStorage.getItem(this.storageKey);
         
         if (savedTheme) {
-            // Use saved preference
             this.setTheme(savedTheme);
         } else {
-            // Check system preference
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             this.setTheme(prefersDark ? 'dark' : 'light');
         }
@@ -138,12 +134,11 @@ class ThemeManager {
     }
 }
 
-// Initialize theme manager when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.themeManager = new ThemeManager();
-});
+// Initialize theme manager immediately to prevent flash
+window.themeManager = new ThemeManager();
 
-// Also initialize immediately in case DOM is already loaded
-if (document.readyState !== 'loading') {
-    window.themeManager = new ThemeManager();
-}
+// Setup toggle buttons and listeners after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.themeManager.setupToggleButton();
+    window.themeManager.setupSystemPreferenceListener();
+});
