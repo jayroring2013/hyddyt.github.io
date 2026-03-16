@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solo Leveling - LiDex Analytics</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
     
     <script>
         tailwind.config = {
@@ -20,26 +24,21 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        primary: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
-                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155', 600: '#475569' }
+                        primary: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81',
+                        }
                     }
                 }
             }
         }
     </script>
-    
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
 </head>
-<body class="bg-dark-900 text-gray-100 min-h-screen">
+<body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
     
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <a href="index.html" class="flex items-center space-x-3">
@@ -50,24 +49,36 @@
                 </a>
                 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-gray-300 hover:text-white">Home</a>
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
-                    <a href="content-detail.html" class="text-white">Content</a>
-                    <a href="reports.html" class="text-gray-300 hover:text-white">Reports</a>
-                    <a href="https://github.com/jayroring2013" target="_blank" class="text-gray-300 hover:text-white">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="content-detail.html" class="nav-link">Content</a>
+                    <a href="reports.html" class="nav-link">Reports</a>
+                    <a href="https://github.com/jayroring2013" target="_blank" class="text-secondary hover:text-primary">
                         <i data-lucide="github" class="w-5 h-5"></i>
                     </a>
                 </div>
                 
                 <div class="flex items-center space-x-4">
                     <div class="relative hidden lg:block">
-                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
-                        <input type="text" placeholder="Search..." class="bg-dark-800 border border-dark-700 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary-500 w-56">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"></i>
+                        <input type="text" placeholder="Search..." class="input-field pl-10 pr-4 py-2 text-sm w-56">
                     </div>
-                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-dark-800">
-                        <i data-lucide="moon" class="w-5 h-5 text-gray-400"></i>
+                    <button data-theme-toggle class="theme-toggle">
+                        <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
+                    </button>
+                    <button data-mobile-menu class="md:hidden theme-toggle">
+                        <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+        
+        <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
+            <div class="px-4 py-4 space-y-4">
+                <a href="index.html" class="nav-link block">Home</a>
+                <a href="dashboard.html" class="nav-link block">Dashboard</a>
+                <a href="content-detail.html" class="nav-link block">Content</a>
+                <a href="reports.html" class="nav-link block">Reports</a>
             </div>
         </div>
     </nav>
@@ -75,34 +86,30 @@
     <!-- Main Content -->
     <main class="pt-24 pb-12 px-4">
         <div class="max-w-7xl mx-auto">
-            
-            <!-- Breadcrumb -->
-            <div class="flex items-center space-x-2 text-sm text-gray-400 mb-6">
-                <a href="dashboard.html" class="hover:text-white">Dashboard</a>
+            <div class="flex items-center space-x-2 text-sm text-secondary mb-6">
+                <a href="dashboard.html" class="hover:text-primary">Dashboard</a>
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                <a href="#" class="hover:text-white">Anime</a>
+                <a href="#" class="hover:text-primary">Anime</a>
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                <span class="text-white">Solo Leveling</span>
+                <span class="text-primary">Solo Leveling</span>
             </div>
             
-            <!-- Title Header -->
             <div class="glass rounded-xl overflow-hidden mb-8">
                 <div class="relative h-48 bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600">
                     <div class="absolute inset-0 bg-black/30"></div>
                     <div class="relative h-full flex items-end p-6">
                         <div class="flex items-end space-x-6">
-                            <div class="w-32 h-48 bg-dark-800 rounded-lg shadow-2xl flex-shrink-0"></div>
+                            <div class="w-32 h-48 bg-secondary rounded-lg shadow-2xl flex-shrink-0"></div>
                             <div class="pb-4">
                                 <div class="flex items-center space-x-3 mb-2">
-                                    <span class="px-3 py-1 bg-purple-500/30 rounded-full text-xs font-medium">Anime</span>
-                                    <span class="px-3 py-1 bg-green-500/30 rounded-full text-xs font-medium">Airing</span>
+                                    <span class="px-3 py-1 bg-purple-500/30 rounded-full text-xs font-medium text-white">Anime</span>
+                                    <span class="px-3 py-1 bg-green-500/30 rounded-full text-xs font-medium text-white">Airing</span>
                                 </div>
                                 <h1 class="text-3xl font-bold text-white mb-2">Solo Leveling Season 2</h1>
                                 <div class="flex items-center space-x-6 text-sm">
-                                    <span class="flex items-center text-gray-300"><i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500"></i>9.2/10</span>
-                                    <span class="flex items-center text-gray-300"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i>Jan 2025</span>
-                                    <span class="flex items-center text-gray-300"><i data-lucide="users" class="w-4 h-4 mr-1"></i>45.2K voters</span>
-                                    <span class="flex items-center text-gray-300"><i data-lucide="eye" class="w-4 h-4 mr-1"></i>2.4M views</span>
+                                    <span class="flex items-center text-gray-200"><i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500"></i>9.2/10</span>
+                                    <span class="flex items-center text-gray-200"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i>Jan 2025</span>
+                                    <span class="flex items-center text-gray-200"><i data-lucide="users" class="w-4 h-4 mr-1"></i>45.2K voters</span>
                                 </div>
                             </div>
                         </div>
@@ -110,213 +117,137 @@
                 </div>
             </div>
             
-            <!-- Content Grid -->
             <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <!-- Main Stats -->
                 <div class="md:col-span-2 space-y-6">
-                    
-                    <!-- Popularity Chart -->
                     <div class="glass rounded-xl p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-white">Popularity Over Time</h3>
+                            <h3 class="text-lg font-semibold text-primary">Popularity Over Time</h3>
                             <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-primary-600 rounded text-xs">Week</button>
-                                <button class="px-3 py-1 bg-dark-700 rounded text-xs text-gray-400">Month</button>
-                                <button class="px-3 py-1 bg-dark-700 rounded text-xs text-gray-400">Year</button>
+                                <button class="px-3 py-1 bg-primary-500 rounded text-xs text-white">Week</button>
+                                <button class="px-3 py-1 glass rounded text-xs text-secondary">Month</button>
+                                <button class="px-3 py-1 glass rounded text-xs text-secondary">Year</button>
                             </div>
                         </div>
                         <canvas id="popularityChart" height="150"></canvas>
                     </div>
                     
-                    <!-- Episode Ratings -->
                     <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Episode Ratings</h3>
+                        <h3 class="text-lg font-semibold text-primary mb-4">Episode Ratings</h3>
                         <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg">
-                                <span class="text-sm text-gray-300">Episode 12</span>
+                            <div class="flex items-center justify-between p-3 glass rounded-lg">
+                                <span class="text-sm text-primary">Episode 12</span>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-dark-700 rounded-full h-2">
+                                    <div class="w-32 bg-secondary rounded-full h-2">
                                         <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
                                     </div>
-                                    <span class="text-sm font-mono text-white">9.5</span>
+                                    <span class="text-sm font-mono text-primary">9.5</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg">
-                                <span class="text-sm text-gray-300">Episode 11</span>
+                            <div class="flex items-center justify-between p-3 glass rounded-lg">
+                                <span class="text-sm text-primary">Episode 11</span>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-dark-700 rounded-full h-2">
+                                    <div class="w-32 bg-secondary rounded-full h-2">
                                         <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
                                     </div>
-                                    <span class="text-sm font-mono text-white">9.2</span>
+                                    <span class="text-sm font-mono text-primary">9.2</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg">
-                                <span class="text-sm text-gray-300">Episode 10</span>
+                            <div class="flex items-center justify-between p-3 glass rounded-lg">
+                                <span class="text-sm text-primary">Episode 10</span>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-dark-700 rounded-full h-2">
+                                    <div class="w-32 bg-secondary rounded-full h-2">
                                         <div class="bg-green-500 h-2 rounded-full" style="width: 89%"></div>
                                     </div>
-                                    <span class="text-sm font-mono text-white">8.9</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg">
-                                <span class="text-sm text-gray-300">Episode 9</span>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-dark-700 rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 91%"></div>
-                                    </div>
-                                    <span class="text-sm font-mono text-white">9.1</span>
+                                    <span class="text-sm font-mono text-primary">8.9</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Related Content -->
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Related Content</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <a href="#" class="p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                                <div class="w-8 h-8 bg-cyan-500/20 rounded flex items-center justify-center mb-2">
-                                    <i data-lucide="book-open" class="w-4 h-4 text-cyan-400"></i>
-                                </div>
-                                <div class="text-sm text-white">Light Novel</div>
-                                <div class="text-xs text-gray-400">14 Volumes</div>
-                            </a>
-                            <a href="#" class="p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                                <div class="w-8 h-8 bg-pink-500/20 rounded flex items-center justify-center mb-2">
-                                    <i data-lucide="book" class="w-4 h-4 text-pink-400"></i>
-                                </div>
-                                <div class="text-sm text-white">Manhwa</div>
-                                <div class="text-xs text-gray-400">179 Chapters</div>
-                            </a>
-                            <a href="#" class="p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
-                                <div class="w-8 h-8 bg-purple-500/20 rounded flex items-center justify-center mb-2">
-                                    <i data-lucide="tv" class="w-4 h-4 text-purple-400"></i>
-                                </div>
-                                <div class="text-sm text-white">Season 1</div>
-                                <div class="text-xs text-gray-400">12 Episodes</div>
-                            </a>
-                        </div>
-                    </div>
-                    
                 </div>
                 
-                <!-- Sidebar -->
                 <div class="space-y-6">
-                    
-                    <!-- Quick Stats -->
                     <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Quick Stats</h3>
+                        <h3 class="text-lg font-semibold text-primary mb-4">Quick Stats</h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-400">Current Rank</span>
-                                <span class="text-sm font-mono text-white">#1</span>
+                                <span class="text-sm text-secondary">Current Rank</span>
+                                <span class="text-sm font-mono text-primary">#1</span>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-400">Rank Change</span>
-                                <span class="text-sm font-mono text-green-400">+3</span>
+                                <span class="text-sm text-secondary">Rank Change</span>
+                                <span class="text-sm font-mono text-green-500">+3</span>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-400">Total Votes</span>
-                                <span class="text-sm font-mono text-white">45,234</span>
+                                <span class="text-sm text-secondary">Total Votes</span>
+                                <span class="text-sm font-mono text-primary">45,234</span>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-400">This Week</span>
-                                <span class="text-sm font-mono text-white">3,892</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-400">Avg Rating</span>
-                                <span class="text-sm font-mono text-white">9.2/10</span>
+                                <span class="text-sm text-secondary">Avg Rating</span>
+                                <span class="text-sm font-mono text-primary">9.2/10</span>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Vote Button -->
                     <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Support This Title</h3>
-                        <button class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2 mb-3">
+                        <h3 class="text-lg font-semibold text-primary mb-4">Support This Title</h3>
+                        <button class="w-full btn-primary flex items-center justify-center space-x-2 mb-3">
                             <i data-lucide="heart" class="w-5 h-5"></i>
                             <span>Vote for this title</span>
                         </button>
-                        <p class="text-xs text-gray-400 text-center">You can vote once per week</p>
+                        <p class="text-xs text-secondary text-center">You can vote once per week</p>
                     </div>
                     
-                    <!-- Share -->
                     <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Share</h3>
-                        <div class="flex items-center space-x-3">
-                            <button class="p-3 bg-dark-800 rounded-lg hover:bg-dark-700">
-                                <i data-lucide="twitter" class="w-5 h-5 text-gray-400"></i>
-                            </button>
-                            <button class="p-3 bg-dark-800 rounded-lg hover:bg-dark-700">
-                                <i data-lucide="facebook" class="w-5 h-5 text-gray-400"></i>
-                            </button>
-                            <button class="p-3 bg-dark-800 rounded-lg hover:bg-dark-700">
-                                <i data-lucide="link" class="w-5 h-5 text-gray-400"></i>
-                            </button>
-                            <button class="p-3 bg-dark-800 rounded-lg hover:bg-dark-700">
-                                <i data-lucide="copy" class="w-5 h-5 text-gray-400"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tags -->
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Tags</h3>
+                        <h3 class="text-lg font-semibold text-primary mb-4">Tags</h3>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Action</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Fantasy</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Adventure</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Korean</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Leveling</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Dungeon</span>
+                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Action</span>
+                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Fantasy</span>
+                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Adventure</span>
+                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Korean</span>
                         </div>
                     </div>
-                    
                 </div>
             </div>
-            
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-dark-700 py-8 px-4">
+    <footer class="border-t border-custom py-8 px-4 bg-secondary">
         <div class="max-w-7xl mx-auto text-center">
-            <p class="text-gray-500 text-sm">© 2013-2026 LiDex. Built by Jay Roring.</p>
+            <p class="text-muted text-sm">© 2013-2026 LiDex. Built by Jay Roring.</p>
         </div>
     </footer>
 
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/nav.js"></script>
     <script>
-        lucide.createIcons();
-        
-        // Popularity Chart
-        new Chart(document.getElementById('popularityChart'), {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                datasets: [{
-                    label: 'Popularity',
-                    data: [75, 78, 82, 85, 88, 92],
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                }
-            }
-        });
-
-        // Theme Toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
+        document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            new Chart(document.getElementById('popularityChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                    datasets: [{
+                        label: 'Popularity',
+                        data: [75, 78, 82, 85, 88, 92],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } }
+                    }
+                }
+            });
         });
     </script>
 </body>
