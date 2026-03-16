@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:
+  workflow_dispatch:  # ← This allows manual trigger
 
 permissions:
   contents: read
@@ -27,14 +27,30 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Debug - Show Secret Names
+        run: |
+          echo "Checking secrets..."
+          if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "❌ SUPABASE_URL is empty or not set"
+            exit 1
+          else
+            echo "✅ SUPABASE_URL is set"
+          fi
+          if [ -z "${{ secrets.SUPABASE_ANON_KEY }}" ]; then
+            echo "❌ SUPABASE_ANON_KEY is empty or not set"
+            exit 1
+          else
+            echo "✅ SUPABASE_ANON_KEY is set"
+          fi
+
       - name: Inject Supabase Config
         run: |
-          cat > assets/js/config.js << EOF
-          const SUPABASE_CONFIG = {
-              SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
-              SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}'
-          };
-          EOF
+          echo "Injecting configuration..."
+          cp assets/js/config.js.template assets/js/config.js
+          sed -i 's|{{SUPABASE_URL}}|${{ secrets.SUPABASE_URL }}|g' assets/js/config.js
+          sed -i 's|{{SUPABASE_ANON_KEY}}|${{ secrets.SUPABASE_ANON_KEY }}|g' assets/js/config.js
+          echo "Configuration injected successfully"
+          cat assets/js/config.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
