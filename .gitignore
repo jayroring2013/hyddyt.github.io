@@ -1,0 +1,7 @@
+# Ignore generated config
+assets/js/config.js
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.log
