@@ -1,254 +1,61 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo Leveling - LiDex Analytics</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        primary: {
-                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
-                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
-                            800: '#3730a3', 900: '#312e81',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
-    
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="index.html" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
-                    </div>
-                    <span class="text-xl font-bold gradient-text">LiDex</span>
-                </a>
-                
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                    <a href="content-detail.html" class="nav-link">Content</a>
-                    <a href="reports.html" class="nav-link">Reports</a>
-                    <a href="https://github.com/jayroring2013" target="_blank" class="text-secondary hover:text-primary">
-                        <i data-lucide="github" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="relative hidden lg:block">
-                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"></i>
-                        <input type="text" placeholder="Search..." class="input-field pl-10 pr-4 py-2 text-sm w-56">
-                    </div>
-                    <button data-theme-toggle class="theme-toggle">
-                        <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
-                    </button>
-                    <button data-mobile-menu class="md:hidden theme-toggle">
-                        <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+<!-- Add this to the script section of content-detail.html -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        lucide.createIcons();
         
-        <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
-            <div class="px-4 py-4 space-y-4">
-                <a href="index.html" class="nav-link block">Home</a>
-                <a href="dashboard.html" class="nav-link block">Dashboard</a>
-                <a href="content-detail.html" class="nav-link block">Content</a>
-                <a href="reports.html" class="nav-link block">Reports</a>
-            </div>
-        </div>
-    </nav>
+        // Get series ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const seriesId = urlParams.get('id');
+        
+        if (!seriesId) {
+            // Redirect to dashboard if no ID provided
+            window.location.href = 'dashboard.html';
+            return;
+        }
+        
+        // Load series data
+        await loadSeriesDetail(seriesId);
+    });
 
-    <!-- Main Content -->
-    <main class="pt-24 pb-12 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center space-x-2 text-sm text-secondary mb-6">
-                <a href="dashboard.html" class="hover:text-primary">Dashboard</a>
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                <a href="#" class="hover:text-primary">Anime</a>
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                <span class="text-primary">Solo Leveling</span>
-            </div>
-            
-            <div class="glass rounded-xl overflow-hidden mb-8">
-                <div class="relative h-48 bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600">
-                    <div class="absolute inset-0 bg-black/30"></div>
-                    <div class="relative h-full flex items-end p-6">
-                        <div class="flex items-end space-x-6">
-                            <div class="w-32 h-48 bg-secondary rounded-lg shadow-2xl flex-shrink-0"></div>
-                            <div class="pb-4">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <span class="px-3 py-1 bg-purple-500/30 rounded-full text-xs font-medium text-white">Anime</span>
-                                    <span class="px-3 py-1 bg-green-500/30 rounded-full text-xs font-medium text-white">Airing</span>
-                                </div>
-                                <h1 class="text-3xl font-bold text-white mb-2">Solo Leveling Season 2</h1>
-                                <div class="flex items-center space-x-6 text-sm">
-                                    <span class="flex items-center text-gray-200"><i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500"></i>9.2/10</span>
-                                    <span class="flex items-center text-gray-200"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i>Jan 2025</span>
-                                    <span class="flex items-center text-gray-200"><i data-lucide="users" class="w-4 h-4 mr-1"></i>45.2K voters</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <div class="md:col-span-2 space-y-6">
-                    <div class="glass rounded-xl p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-primary">Popularity Over Time</h3>
-                            <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-primary-500 rounded text-xs text-white">Week</button>
-                                <button class="px-3 py-1 glass rounded text-xs text-secondary">Month</button>
-                                <button class="px-3 py-1 glass rounded text-xs text-secondary">Year</button>
-                            </div>
-                        </div>
-                        <canvas id="popularityChart" height="150"></canvas>
-                    </div>
-                    
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-primary mb-4">Episode Ratings</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 glass rounded-lg">
-                                <span class="text-sm text-primary">Episode 12</span>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-secondary rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
-                                    </div>
-                                    <span class="text-sm font-mono text-primary">9.5</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between p-3 glass rounded-lg">
-                                <span class="text-sm text-primary">Episode 11</span>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-secondary rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
-                                    </div>
-                                    <span class="text-sm font-mono text-primary">9.2</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between p-3 glass rounded-lg">
-                                <span class="text-sm text-primary">Episode 10</span>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-32 bg-secondary rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 89%"></div>
-                                    </div>
-                                    <span class="text-sm font-mono text-primary">8.9</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-primary mb-4">Quick Stats</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-secondary">Current Rank</span>
-                                <span class="text-sm font-mono text-primary">#1</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-secondary">Rank Change</span>
-                                <span class="text-sm font-mono text-green-500">+3</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-secondary">Total Votes</span>
-                                <span class="text-sm font-mono text-primary">45,234</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-secondary">Avg Rating</span>
-                                <span class="text-sm font-mono text-primary">9.2/10</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-primary mb-4">Support This Title</h3>
-                        <button class="w-full btn-primary flex items-center justify-center space-x-2 mb-3">
-                            <i data-lucide="heart" class="w-5 h-5"></i>
-                            <span>Vote for this title</span>
-                        </button>
-                        <p class="text-xs text-secondary text-center">You can vote once per week</p>
-                    </div>
-                    
-                    <div class="glass rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-primary mb-4">Tags</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Action</span>
-                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Fantasy</span>
-                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Adventure</span>
-                            <span class="px-3 py-1 glass rounded-full text-xs text-secondary">Korean</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+    async function loadSeriesDetail(seriesId) {
+        const { data: series, error } = await api.getSeriesById(seriesId);
+        
+        if (error || !series) {
+            alert('Series not found');
+            window.location.href = 'dashboard.html';
+            return;
+        }
+        
+        // Update page title
+        document.title = `${series.title} - LiDex Analytics`;
+        
+        // Update header with series info
+        // (Update the DOM elements with series data)
+        
+        // Load vote statistics
+        const { data: votes } = await api.getVoteStats({ seriesId });
+        
+        // Update charts with real data
+        updateCharts(series, votes);
+    }
 
-    <!-- Footer -->
-    <footer class="border-t border-custom py-8 px-4 bg-secondary">
-        <div class="max-w-7xl mx-auto text-center">
-            <p class="text-muted text-sm">© 2013-2026 LiDex. Built by Jay Roring.</p>
-        </div>
-    </footer>
+    // Vote button handler
+    async function submitVote(seriesId) {
+        const { data, error } = await api.submitVote({ seriesId });
+        
+        if (error) {
+            alert('Failed to submit vote. Please try again.');
+            return;
+        }
+        
+        alert('Vote submitted successfully!');
+        // Refresh the page to show updated stats
+        location.reload();
+    }
 
-    <script src="assets/js/theme.js"></script>
-    <script src="assets/js/nav.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            new Chart(document.getElementById('popularityChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                    datasets: [{
-                        label: 'Popularity',
-                        data: [75, 78, 82, 85, 88, 92],
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } },
-                        x: { grid: { display: false }, ticks: { color: isDark ? '#94a3b8' : '#64748b' } }
-                    }
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+    function updateCharts(series, votes) {
+        // Update charts with real data from database
+        // Similar to before but using actual vote data
+    }
+</script>
