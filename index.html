@@ -4,18 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiDex - Light Novel, Anime & Manga Analytics</title>
+    <meta name="description" content="A personal project tracking and analyzing data for Light Novels, Anime, and Manga.">
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Eruda Mobile Console (Debug Only - Remove after testing) -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    
+    <!-- Shared Styles -->
     <link rel="stylesheet" href="assets/css/styles.css">
     
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -36,6 +50,32 @@
             }
         }
     </script>
+    
+    <style>
+        /* Debug Overlay Styles */
+        #debugOverlay {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #0f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            z-index: 9999;
+            max-width: 280px;
+            display: none;
+            border: 1px solid #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        #debugOverlay.success { border-color: #22c55e; }
+        #debugOverlay.error { border-color: #ef4444; }
+        #debugOverlay .debug-title { font-weight: bold; margin-bottom: 8px; color: #6366f1; }
+        #debugOverlay .debug-item { margin: 4px 0; }
+        #debugOverlay .debug-ok { color: #22c55e; }
+        #debugOverlay .debug-error { color: #ef4444; }
+    </style>
 </head>
 <body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
     
@@ -43,6 +83,7 @@
     <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
                         <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
@@ -50,6 +91,7 @@
                     <span class="text-xl font-bold gradient-text">LiDex</span>
                 </a>
                 
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="dashboard.html" class="nav-link">Dashboard</a>
@@ -60,14 +102,20 @@
                     </a>
                 </div>
                 
+                <!-- Right Side -->
                 <div class="flex items-center space-x-4">
+                    <!-- Search (Desktop) -->
                     <div class="relative hidden lg:block">
                         <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"></i>
                         <input type="text" id="searchInput" placeholder="Search series..." class="input-field pl-10 pr-4 py-2 text-sm w-56">
                     </div>
+                    
+                    <!-- Theme Toggle -->
                     <button data-theme-toggle class="theme-toggle">
                         <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
                     </button>
+                    
+                    <!-- Mobile Menu Button -->
                     <button data-mobile-menu class="md:hidden theme-toggle">
                         <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
                     </button>
@@ -75,6 +123,7 @@
             </div>
         </div>
         
+        <!-- Mobile Menu (Hidden by default) -->
         <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
             <div class="px-4 py-4 space-y-4">
                 <a href="index.html" class="nav-link block">Home</a>
@@ -182,6 +231,7 @@
             <div id="trendingError" class="text-center py-12 hidden">
                 <i data-lucide="alert-circle" class="w-8 h-8 text-red-500 mx-auto mb-4"></i>
                 <p class="text-secondary">Failed to load trending content</p>
+                <p class="text-muted text-sm mt-2" id="trendingErrorMessage"></p>
             </div>
         </div>
     </section>
@@ -242,19 +292,96 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Debug Overlay (Mobile Only) -->
+    <div id="debugOverlay">
+        <div class="debug-title">🔍 LiDex Debug</div>
+        <div id="debugContent">Initializing...</div>
+    </div>
+
+    <!-- ============================================
+         SCRIPTS - LOAD IN EXACT ORDER
+         ============================================ -->
+    
+    <!-- 1. Config FIRST (generated by GitHub Actions) -->
+    <script src="assets/js/config.js"></script>
+    
+    <!-- 2. Supabase Client SECOND -->
     <script src="assets/js/supabase.js"></script>
+    
+    <!-- 3. API THIRD -->
     <script src="assets/js/api.js"></script>
+    
+    <!-- 4. Theme FOURTH -->
     <script src="assets/js/theme.js"></script>
+    
+    <!-- 5. Nav FIFTH -->
     <script src="assets/js/nav.js"></script>
+    
+    <!-- 6. Page-Specific Scripts LAST -->
     <script>
+        // Initialize Eruda for mobile debugging (remove after testing)
+        if (/mobile/i.test(navigator.userAgent)) {
+            eruda.init({
+                defaults: {
+                    displaySize: 45,
+                    transparent: true
+                }
+            });
+            console.log('📱 Eruda mobile console initialized');
+        }
+
+        // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🔍 === LiDex Initialization ===');
+            
+            // Initialize Lucide icons
             lucide.createIcons();
             
+            // Show debug overlay on mobile
+            const isMobile = /mobile/i.test(navigator.userAgent);
+            if (isMobile) {
+                document.getElementById('debugOverlay').style.display = 'block';
+                updateDebugOverlay('⏳ Loading...');
+            }
+            
+            // Check configuration
+            console.log('1. Checking config...');
+            if (typeof SUPABASE_CONFIG === 'undefined') {
+                console.error('❌ config.js NOT loaded!');
+                if (isMobile) updateDebugOverlay('❌ config.js NOT loaded', 'error');
+            } else {
+                console.log('✅ config.js loaded');
+                console.log('   URL:', SUPABASE_CONFIG.url?.substring(0, 30) + '...');
+                if (isMobile) updateDebugOverlay('✅ Config loaded', 'success');
+            }
+            
+            // Wait for Supabase to initialize
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Check database
+            console.log('2. Checking database...');
+            if (typeof window.db === 'undefined') {
+                console.error('❌ Database NOT initialized!');
+                if (isMobile) updateDebugOverlay('❌ DB not initialized', 'error');
+            } else {
+                console.log('✅ Database initialized');
+                if (isMobile) updateDebugOverlay('✅ DB connected', 'success');
+            }
+            
+            // Check API
+            console.log('3. Checking API...');
+            if (typeof window.api === 'undefined') {
+                console.error('❌ API NOT initialized!');
+            } else {
+                console.log('✅ API initialized');
+            }
+            
             // Load site statistics
+            console.log('4. Loading site stats...');
             await loadSiteStats();
             
             // Load trending content
+            console.log('5. Loading trending content...');
             await loadTrendingContent();
             
             // Set last updated timestamp
@@ -263,23 +390,57 @@
                 month: 'long',
                 day: 'numeric'
             });
+            
+            console.log('🔍 === Initialization Complete ===');
         });
+
+        // Update debug overlay (mobile)
+        function updateDebugOverlay(message, type = 'info') {
+            const overlay = document.getElementById('debugOverlay');
+            const content = document.getElementById('debugContent');
+            content.innerHTML = message.replace(/\n/g, '<br>');
+            
+            overlay.classList.remove('success', 'error');
+            if (type === 'success') overlay.classList.add('success');
+            if (type === 'error') overlay.classList.add('error');
+        }
 
         // Load site statistics from database
         async function loadSiteStats() {
             try {
-                const stats = await api.getSiteStats();
+                if (!window.api) {
+                    throw new Error('API not initialized');
+                }
+                
+                const stats = await window.api.getSiteStats();
+                
                 document.getElementById('statSeries').textContent = stats.totalSeries.toLocaleString();
                 document.getElementById('statAnime').textContent = stats.totalAnime.toLocaleString();
                 document.getElementById('statManga').textContent = stats.totalManga.toLocaleString();
                 document.getElementById('statVotes').textContent = stats.totalVotes.toLocaleString();
+                
+                console.log('📊 Site Stats:', stats);
+                
+                // Update debug overlay
+                if (/mobile/i.test(navigator.userAgent)) {
+                    updateDebugOverlay(
+                        `✅ Connected!\n📚 ${stats.totalSeries} Series\n📺 ${stats.totalAnime} Anime\n📖 ${stats.totalManga} Manga\n❤️ ${stats.totalVotes} Votes`,
+                        'success'
+                    );
+                }
+                
             } catch (error) {
                 console.error('Failed to load stats:', error);
+                
                 // Show fallback values
                 document.getElementById('statSeries').textContent = '0';
                 document.getElementById('statAnime').textContent = '0';
                 document.getElementById('statManga').textContent = '0';
                 document.getElementById('statVotes').textContent = '0';
+                
+                if (/mobile/i.test(navigator.userAgent)) {
+                    updateDebugOverlay(`❌ ${error.message}`, 'error');
+                }
             }
         }
 
@@ -288,12 +449,17 @@
             const loadingEl = document.getElementById('trendingLoading');
             const cardsEl = document.getElementById('trendingCards');
             const errorEl = document.getElementById('trendingError');
+            const errorMsgEl = document.getElementById('trendingErrorMessage');
             
             try {
-                const { data, error } = await api.getTrendingSeries({ limit: 3 });
+                if (!window.api) {
+                    throw new Error('API not initialized');
+                }
+                
+                const { data, error } = await window.api.getTrendingSeries({ limit: 3 });
                 
                 if (error || !data || data.length === 0) {
-                    throw new Error('No trending data available');
+                    throw new Error(error?.message || 'No trending data available');
                 }
                 
                 // Hide loading, show cards
@@ -301,7 +467,7 @@
                 cardsEl.classList.remove('hidden');
                 
                 // Generate cards
-                cardsEl.innerHTML = data.map(series => `
+                cardsEl.innerHTML = data.map((series, index) => `
                     <div class="glass rounded-xl overflow-hidden stat-card">
                         <div class="relative h-40 bg-gradient-to-br from-primary-600 to-purple-700">
                             ${series.cover_url ? 
@@ -314,7 +480,7 @@
                                 ${series.item_type ? series.item_type.charAt(0).toUpperCase() + series.item_type.slice(1) : 'Series'}
                             </div>
                             <div class="absolute top-3 right-3 bg-green-500/90 px-2 py-1 rounded text-xs font-mono text-white">
-                                #${series.rank || 'NEW'}
+                                #${index + 1}
                             </div>
                         </div>
                         <div class="p-5">
@@ -322,7 +488,6 @@
                             <div class="flex items-center space-x-3 text-sm text-secondary mb-3">
                                 <span><i data-lucide="star" class="w-3 h-3 inline mr-1 text-yellow-500"></i>${series.score || 'N/A'}</span>
                                 <span><i data-lucide="heart" class="w-3 h-3 inline mr-1 text-green-500"></i>${series.vote_count || 0}</span>
-                                <span><i data-lucide="trending-up" class="w-3 h-3 inline mr-1 text-green-500"></i>+${series.vote_change || 0}%</span>
                             </div>
                             <a href="content-detail.html?id=${series.id}" class="text-primary-500 hover:text-primary-600 text-sm font-medium flex items-center">
                                 View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
@@ -334,10 +499,13 @@
                 // Re-initialize Lucide icons for new content
                 lucide.createIcons();
                 
+                console.log('✅ Trending content loaded:', data.length, 'items');
+                
             } catch (error) {
                 console.error('Failed to load trending:', error);
                 loadingEl.classList.add('hidden');
                 errorEl.classList.remove('hidden');
+                errorMsgEl.textContent = error.message;
             }
         }
 
@@ -346,66 +514,16 @@
             const query = e.target.value.trim();
             if (query.length < 2) return;
             
-            // You can implement search dropdown or redirect to search page
-            console.log('Searching for:', query);
-            const { data } = await api.getSeries({ search: query, limit: 10 });
-            console.log('Search results:', data);
+            console.log('🔍 Searching for:', query);
+            
+            if (window.api) {
+                const { data } = await window.api.getSeries({ search: query, limit: 10 });
+                console.log('Search results:', data);
+            }
         });
     </script>
-<!-- DEBUG SCRIPT - Remove after testing -->
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🔍 === SUPABASE CONNECTION DEBUG ===');
-    
-    // 1. Check if Supabase CDN loaded
-    console.log('1. Supabase CDN:', typeof supabase !== 'undefined' ? '✅ Loaded' : '❌ Not Loaded');
-    
-    // 2. Check if config loaded
-    console.log('2. Config:', typeof SUPABASE_CONFIG !== 'undefined' ? '✅ Loaded' : '❌ Not Loaded');
-    if (typeof SUPABASE_CONFIG !== 'undefined') {
-        console.log('   - URL:', SUPABASE_CONFIG.URL ? '✅ Present' : '❌ Missing');
-        console.log('   - Key:', SUPABASE_CONFIG.ANON_KEY ? '✅ Present' : '❌ Missing');
-        console.log('   - URL Preview:', SUPABASE_CONFIG.URL?.substring(0, 25) + '...');
-    }
-    
-    // 3. Check if db initialized
-    console.log('3. Database:', typeof window.db !== 'undefined' ? '✅ Initialized' : '❌ Not Initialized');
-    
-    // 4. Check if api initialized
-    console.log('4. API:', typeof window.api !== 'undefined' ? '✅ Initialized' : '❌ Not Initialized');
-    
-    // 5. Test actual connection
-    if (window.db) {
-        console.log('5. Testing connection...');
-        try {
-            const { data, error } = await window.db.from('series').select('count', { count: 'exact', head: true });
-            if (error) {
-                console.log('   ❌ Connection Failed:', error.message);
-            } else {
-                console.log('   ✅ Connection Successful!');
-                console.log('   📊 Series count:', data);
-            }
-        } catch (e) {
-            console.log('   ❌ Connection Error:', e.message);
-        }
-    }
-    
-    // 6. Test getSiteStats
-    if (window.api) {
-        console.log('6. Testing API...');
-        try {
-            const stats = await window.api.getSiteStats();
-            console.log('   ✅ API Working!');
-            console.log('   📊 Stats:', stats);
-        } catch (e) {
-            console.log('   ❌ API Error:', e.message);
-        }
-    }
-    
-    console.log('🔍 === END DEBUG ===');
-});
-</script>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<!-- Mobile Debug Console (Remove after debugging) -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>
     if (/mobile/i.test(navigator.userAgent)) {
         eruda.init();
