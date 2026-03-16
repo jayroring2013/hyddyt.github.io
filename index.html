@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiDex - Light Novel, Anime & Manga Analytics</title>
-    <meta name="description" content="A personal project tracking and analyzing data for Light Novels, Anime, and Manga. Built by the community, for the community.">
+    <meta name="description" content="A personal project tracking and analyzing data for Light Novels, Anime, and Manga.">
     
-    <!-- Tailwind CSS -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN for GitHub Pages) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Lucide Icons -->
@@ -15,10 +20,8 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css">
     
     <!-- Tailwind Config -->
     <script>
@@ -32,96 +35,23 @@
                     },
                     colors: {
                         primary: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                        },
-                        dark: {
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155',
-                            600: '#475569',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81',
                         }
                     }
                 }
             }
         }
     </script>
-    
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
-        
-        .gradient-text {
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 5s ease infinite;
-        }
-        
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .stat-card { transition: all 0.3s ease; }
-        .stat-card:hover { transform: translateY(-4px); }
-        
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .nav-link {
-            position: relative;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #6366f1;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after { width: 100%; }
-    </style>
 </head>
-<body class="bg-dark-900 text-gray-100 min-h-screen">
+<body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
     
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+    <!-- Navigation (Shared Structure) -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
                         <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
@@ -129,26 +59,46 @@
                     <span class="text-xl font-bold gradient-text">LiDex</span>
                 </a>
                 
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="nav-link text-white">Home</a>
-                    <a href="dashboard.html" class="nav-link text-gray-300 hover:text-white">Dashboard</a>
-                    <a href="content-detail.html" class="nav-link text-gray-300 hover:text-white">Content</a>
-                    <a href="reports.html" class="nav-link text-gray-300 hover:text-white">Reports</a>
-                    <a href="https://github.com/jayroring2013" target="_blank" class="text-gray-300 hover:text-white">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="content-detail.html" class="nav-link">Content</a>
+                    <a href="reports.html" class="nav-link">Reports</a>
+                    <a href="https://github.com/jayroring2013" target="_blank" class="text-secondary hover:text-primary">
                         <i data-lucide="github" class="w-5 h-5"></i>
                     </a>
                 </div>
                 
+                <!-- Right Side -->
                 <div class="flex items-center space-x-4">
+                    <!-- Search (Desktop) -->
                     <div class="relative hidden lg:block">
-                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"></i>
                         <input type="text" placeholder="Search..." 
-                            class="bg-dark-800 border border-dark-700 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary-500 w-56">
+                            class="input-field pl-10 pr-4 py-2 text-sm w-56">
                     </div>
-                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-dark-800">
-                        <i data-lucide="moon" class="w-5 h-5 text-gray-400"></i>
+                    
+                    <!-- Theme Toggle -->
+                    <button data-theme-toggle class="theme-toggle">
+                        <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button data-mobile-menu class="md:hidden theme-toggle">
+                        <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
+            <div class="px-4 py-4 space-y-4">
+                <a href="index.html" class="nav-link block">Home</a>
+                <a href="dashboard.html" class="nav-link block">Dashboard</a>
+                <a href="content-detail.html" class="nav-link block">Content</a>
+                <a href="reports.html" class="nav-link block">Reports</a>
             </div>
         </div>
     </nav>
@@ -157,27 +107,26 @@
     <section class="pt-32 pb-20 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="text-center animate-fade-in">
-                <div class="inline-flex items-center space-x-2 bg-dark-800 border border-dark-700 rounded-full px-4 py-2 mb-6">
-                    <span class="text-sm text-gray-400">👋 A personal project by Jay Roring</span>
+                <div class="inline-flex items-center space-x-2 glass px-4 py-2 mb-6">
+                    <span class="text-sm text-muted">👋 A personal project by Jay Roring</span>
                 </div>
                 
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-primary">
                     Tracking & Analyzing<br>
                     <span class="gradient-text">Light Novels, Anime & Manga</span>
                 </h1>
                 
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10">
+                <p class="text-lg text-secondary max-w-2xl mx-auto mb-10">
                     This is a community-driven data project I built to track popularity trends, 
-                    voting patterns, and analytics for LN/Anime/Manga. All data is gathered from 
-                    public sources and community contributions.
+                    voting patterns, and analytics for LN/Anime/Manga.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="dashboard.html" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2">
+                    <a href="dashboard.html" class="btn-primary flex items-center space-x-2">
                         <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
                         <span>View Dashboard</span>
                     </a>
-                    <a href="https://github.com/jayroring2013/bxh" target="_blank" class="bg-dark-800 hover:bg-dark-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 border border-dark-700">
+                    <a href="https://github.com/jayroring2013/bxh" target="_blank" class="btn-secondary flex items-center space-x-2">
                         <i data-lucide="github" class="w-5 h-5"></i>
                         <span>View on GitHub</span>
                     </a>
@@ -186,214 +135,43 @@
             
             <!-- Stats Overview -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 animate-slide-up">
-                <div class="stat-card glass rounded-xl p-6 text-center">
+                <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-primary-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="book-open" class="w-6 h-6 text-primary-400"></i>
+                        <i data-lucide="book-open" class="w-6 h-6 text-primary-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-white mb-1">15,847</div>
-                    <div class="text-sm text-gray-400">Light Novels</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1">15,847</div>
+                    <div class="text-sm text-secondary">Light Novels</div>
                 </div>
                 
-                <div class="stat-card glass rounded-xl p-6 text-center">
+                <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="tv" class="w-6 h-6 text-purple-400"></i>
+                        <i data-lucide="tv" class="w-6 h-6 text-purple-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-white mb-1">8,234</div>
-                    <div class="text-sm text-gray-400">Anime Titles</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1">8,234</div>
+                    <div class="text-sm text-secondary">Anime Titles</div>
                 </div>
                 
-                <div class="stat-card glass rounded-xl p-6 text-center">
+                <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="book" class="w-6 h-6 text-pink-400"></i>
+                        <i data-lucide="book" class="w-6 h-6 text-pink-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-white mb-1">23,156</div>
-                    <div class="text-sm text-gray-400">Manga Series</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1">23,156</div>
+                    <div class="text-sm text-secondary">Manga Series</div>
                 </div>
                 
-                <div class="stat-card glass rounded-xl p-6 text-center">
+                <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="users" class="w-6 h-6 text-green-400"></i>
+                        <i data-lucide="users" class="w-6 h-6 text-green-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-white mb-1">1,247</div>
-                    <div class="text-sm text-gray-400">Community Members</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1">1,247</div>
+                    <div class="text-sm text-secondary">Community Members</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Trending Section -->
-    <section class="py-20 px-4 bg-dark-800/50">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center justify-between mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Trending This Week</h2>
-                    <p class="text-gray-400">Based on community votes and views</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">Week</button>
-                    <button class="px-4 py-2 bg-dark-700 text-gray-400 rounded-lg text-sm font-medium hover:text-white">Month</button>
-                    <button class="px-4 py-2 bg-dark-700 text-gray-400 rounded-lg text-sm font-medium hover:text-white">All Time</button>
-                </div>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass rounded-xl overflow-hidden stat-card">
-                    <div class="relative h-40 bg-gradient-to-br from-primary-600 to-purple-700">
-                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs">
-                            <i data-lucide="tv" class="w-3 h-3 inline mr-1"></i>Anime
-                        </div>
-                        <div class="absolute top-3 right-3 bg-green-500/90 px-2 py-1 rounded text-xs font-mono">#1</div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-white mb-2">Solo Leveling Season 2</h3>
-                        <div class="flex items-center space-x-3 text-sm text-gray-400 mb-3">
-                            <span><i data-lucide="star" class="w-3 h-3 inline mr-1 text-yellow-500"></i>9.2</span>
-                            <span><i data-lucide="eye" class="w-3 h-3 inline mr-1"></i>2.4M</span>
-                            <span><i data-lucide="trending-up" class="w-3 h-3 inline mr-1 text-green-400"></i>+45%</span>
-                        </div>
-                        <a href="content-detail.html" class="text-primary-400 hover:text-primary-300 text-sm font-medium flex items-center">
-                            View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="glass rounded-xl overflow-hidden stat-card">
-                    <div class="relative h-40 bg-gradient-to-br from-pink-600 to-rose-700">
-                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs">
-                            <i data-lucide="book" class="w-3 h-3 inline mr-1"></i>Manga
-                        </div>
-                        <div class="absolute top-3 right-3 bg-green-500/90 px-2 py-1 rounded text-xs font-mono">#2</div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-white mb-2">One Piece</h3>
-                        <div class="flex items-center space-x-3 text-sm text-gray-400 mb-3">
-                            <span><i data-lucide="star" class="w-3 h-3 inline mr-1 text-yellow-500"></i>9.5</span>
-                            <span><i data-lucide="message-circle" class="w-3 h-3 inline mr-1"></i>156K</span>
-                            <span><i data-lucide="trending-up" class="w-3 h-3 inline mr-1 text-green-400"></i>+32%</span>
-                        </div>
-                        <a href="content-detail.html" class="text-primary-400 hover:text-primary-300 text-sm font-medium flex items-center">
-                            View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="glass rounded-xl overflow-hidden stat-card">
-                    <div class="relative h-40 bg-gradient-to-br from-cyan-600 to-blue-700">
-                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs">
-                            <i data-lucide="book-open" class="w-3 h-3 inline mr-1"></i>LN
-                        </div>
-                        <div class="absolute top-3 right-3 bg-green-500/90 px-2 py-1 rounded text-xs font-mono">#3</div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-white mb-2">Overlord Vol 16</h3>
-                        <div class="flex items-center space-x-3 text-sm text-gray-400 mb-3">
-                            <span><i data-lucide="star" class="w-3 h-3 inline mr-1 text-yellow-500"></i>9.1</span>
-                            <span><i data-lucide="bookmark" class="w-3 h-3 inline mr-1"></i>89K</span>
-                            <span><i data-lucide="trending-up" class="w-3 h-3 inline mr-1 text-green-400"></i>+28%</span>
-                        </div>
-                        <a href="content-detail.html" class="text-primary-400 hover:text-primary-300 text-sm font-medium flex items-center">
-                            View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="py-20 px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="glass rounded-2xl p-8 md:p-12">
-                <div class="flex items-start space-x-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="user" class="w-10 h-10 text-white"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-white mb-4">About This Project</h2>
-                        <p class="text-gray-400 mb-4">
-                            Hi! I'm <strong class="text-white">Jay Roring</strong>. I started this project back in 2013 
-                            as a simple tracking site for light novels. Over the years, it has evolved into a 
-                            community-driven analytics platform.
-                        </p>
-                        <p class="text-gray-400 mb-6">
-                            The goal is to provide transparent, data-driven insights for the LN/Anime/Manga 
-                            community. All data is collected from public APIs (AniList, MyAnimeList, NovelUpdates) 
-                            and community voting.
-                        </p>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Open Source</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Community Driven</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Free to Use</span>
-                            <span class="px-3 py-1 bg-dark-800 rounded-full text-xs text-gray-400">Vietnamese & English</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="py-20 px-4 bg-dark-800/50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-2xl font-bold text-white mb-4">What You Can Do Here</h2>
-                <p class="text-gray-400">Built for fans who love data as much as content</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-primary-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="circle-help" class="w-6 h-6 text-primary-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Track Trends</h3>
-                    <p class="text-gray-400 text-sm">Monitor popularity changes over time with interactive charts and real-time updates.</p>
-                </div>
-                
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="git-compare" class="w-6 h-6 text-purple-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Compare Titles</h3>
-                    <p class="text-gray-400 text-sm">Side-by-side comparison of your favorite series across multiple metrics.</p>
-                </div>
-                
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="file-text" class="w-6 h-6 text-green-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Generate Reports</h3>
-                    <p class="text-gray-400 text-sm">Create custom reports and export data for your own analysis or content creation.</p>
-                </div>
-                
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="vote" class="w-6 h-6 text-pink-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Community Voting</h3>
-                    <p class="text-gray-400 text-sm">Participate in monthly votes and help shape the rankings.</p>
-                </div>
-                
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="layers" class="w-6 h-6 text-cyan-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Cross-Media Tracking</h3>
-                    <p class="text-gray-400 text-sm">Follow adaptations from LN → Manga → Anime in one place.</p>
-                </div>
-                
-                <div class="glass rounded-xl p-6 stat-card">
-                    <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="database" class="w-6 h-6 text-yellow-400"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">Open Data</h3>
-                    <p class="text-gray-400 text-sm">All data is publicly accessible. Download and use it for your projects.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-dark-700 py-12 px-4">
+    <!-- Footer (Shared Structure) -->
+    <footer class="border-t border-custom py-12 px-4 bg-secondary">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
@@ -403,67 +181,65 @@
                         </div>
                         <span class="text-xl font-bold gradient-text">LiDex</span>
                     </div>
-                    <p class="text-gray-400 text-sm">
+                    <p class="text-secondary text-sm">
                         A personal project tracking LN/Anime/Manga data since 2013.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Pages</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
-                        <li><a href="dashboard.html" class="hover:text-white transition-colors">Dashboard</a></li>
-                        <li><a href="content-detail.html" class="hover:text-white transition-colors">Content</a></li>
-                        <li><a href="reports.html" class="hover:text-white transition-colors">Reports</a></li>
+                    <h4 class="text-primary font-semibold mb-4">Pages</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                        <li><a href="index.html" class="hover:text-primary-500 transition-colors">Home</a></li>
+                        <li><a href="dashboard.html" class="hover:text-primary-500 transition-colors">Dashboard</a></li>
+                        <li><a href="content-detail.html" class="hover:text-primary-500 transition-colors">Content</a></li>
+                        <li><a href="reports.html" class="hover:text-primary-500 transition-colors">Reports</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Data Sources</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="https://anilist.co" target="_blank" class="hover:text-white transition-colors">AniList</a></li>
-                        <li><a href="https://myanimelist.net" target="_blank" class="hover:text-white transition-colors">MyAnimeList</a></li>
-                        <li><a href="https://novelupdates.com" target="_blank" class="hover:text-white transition-colors">NovelUpdates</a></li>
+                    <h4 class="text-primary font-semibold mb-4">Data Sources</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                        <li><a href="https://anilist.co" target="_blank" class="hover:text-primary-500 transition-colors">AniList</a></li>
+                        <li><a href="https://myanimelist.net" target="_blank" class="hover:text-primary-500 transition-colors">MyAnimeList</a></li>
+                        <li><a href="https://novelupdates.com" target="_blank" class="hover:text-primary-500 transition-colors">NovelUpdates</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Connect</h4>
+                    <h4 class="text-primary font-semibold mb-4">Connect</h4>
                     <div class="flex items-center space-x-4">
-                        <a href="https://github.com/jayroring2013" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="https://github.com/jayroring2013" target="_blank" class="text-secondary hover:text-primary transition-colors">
                             <i data-lucide="github" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="text-secondary hover:text-primary transition-colors">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="text-secondary hover:text-primary transition-colors">
                             <i data-lucide="mail" class="w-5 h-5"></i>
                         </a>
                     </div>
                 </div>
             </div>
             
-            <div class="border-t border-dark-700 pt-8 flex flex-col md:flex-row items-center justify-between">
-                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+            <div class="border-t border-custom pt-8 flex flex-col md:flex-row items-center justify-between">
+                <p class="text-muted text-sm mb-4 md:mb-0">
                     © 2013-2026 LiDex. Built by Jay Roring.
                 </p>
-                <p class="text-gray-500 text-sm">
+                <p class="text-muted text-sm">
                     Data updated: <span class="font-mono">March 16, 2026</span>
                 </p>
             </div>
         </div>
     </footer>
 
+    <!-- Shared Scripts (Load AFTER DOM content) -->
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/nav.js"></script>
+    
+    <!-- Page-Specific Scripts -->
     <script>
-        lucide.createIcons();
-        
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const icon = themeToggle.querySelector('i');
-            icon.setAttribute('data-lucide', html.classList.contains('dark') ? 'moon' : 'sun');
+        // Initialize Lucide icons after theme system loads
+        document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
         });
     </script>
