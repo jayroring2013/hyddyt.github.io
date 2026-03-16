@@ -28,7 +28,7 @@ class LiDexAPI {
     async getTrendingSeries({ limit = 3 } = {}) {
         const { data, error } = await this.db
             .from('series')
-            .select('*, novel_votes(vote_count)')
+            .select('*')
             .order('is_featured', { ascending: false })
             .limit(limit);
 
@@ -39,7 +39,7 @@ class LiDexAPI {
     async getSeriesById(id) {
         const { data, error } = await this.db
             .from('series')
-            .select('*, anime_meta(*), manga_meta(*), volumes(*)')
+            .select('*')
             .eq('id', id)
             .single();
 
