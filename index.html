@@ -352,11 +352,57 @@
             console.log('Search results:', data);
         });
     </script>
+<!-- DEBUG SCRIPT - Remove after testing -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('SUPABASE_CONFIG:', typeof SUPABASE_CONFIG);
-    console.log('db:', typeof window.db);
-    console.log('api:', typeof window.api);
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('🔍 === SUPABASE CONNECTION DEBUG ===');
+    
+    // 1. Check if Supabase CDN loaded
+    console.log('1. Supabase CDN:', typeof supabase !== 'undefined' ? '✅ Loaded' : '❌ Not Loaded');
+    
+    // 2. Check if config loaded
+    console.log('2. Config:', typeof SUPABASE_CONFIG !== 'undefined' ? '✅ Loaded' : '❌ Not Loaded');
+    if (typeof SUPABASE_CONFIG !== 'undefined') {
+        console.log('   - URL:', SUPABASE_CONFIG.URL ? '✅ Present' : '❌ Missing');
+        console.log('   - Key:', SUPABASE_CONFIG.ANON_KEY ? '✅ Present' : '❌ Missing');
+        console.log('   - URL Preview:', SUPABASE_CONFIG.URL?.substring(0, 25) + '...');
+    }
+    
+    // 3. Check if db initialized
+    console.log('3. Database:', typeof window.db !== 'undefined' ? '✅ Initialized' : '❌ Not Initialized');
+    
+    // 4. Check if api initialized
+    console.log('4. API:', typeof window.api !== 'undefined' ? '✅ Initialized' : '❌ Not Initialized');
+    
+    // 5. Test actual connection
+    if (window.db) {
+        console.log('5. Testing connection...');
+        try {
+            const { data, error } = await window.db.from('series').select('count', { count: 'exact', head: true });
+            if (error) {
+                console.log('   ❌ Connection Failed:', error.message);
+            } else {
+                console.log('   ✅ Connection Successful!');
+                console.log('   📊 Series count:', data);
+            }
+        } catch (e) {
+            console.log('   ❌ Connection Error:', e.message);
+        }
+    }
+    
+    // 6. Test getSiteStats
+    if (window.api) {
+        console.log('6. Testing API...');
+        try {
+            const stats = await window.api.getSiteStats();
+            console.log('   ✅ API Working!');
+            console.log('   📊 Stats:', stats);
+        } catch (e) {
+            console.log('   ❌ API Error:', e.message);
+        }
+    }
+    
+    console.log('🔍 === END DEBUG ===');
 });
 </script>
 </body>
