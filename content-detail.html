@@ -1,61 +1,291 @@
-<!-- Add this to the script section of content-detail.html -->
-
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        lucide.createIcons();
-        
-        // Get series ID from URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const seriesId = urlParams.get('id');
-        
-        if (!seriesId) {
-            // Redirect to dashboard if no ID provided
-            window.location.href = 'dashboard.html';
-            return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Detail - LiDex Analytics</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81',
+                        }
+                    }
+                }
+            }
         }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">LiDex</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="content-detail.html" class="nav-link">Content</a>
+                    <a href="reports.html" class="nav-link">Reports</a>
+                    <a href="https://github.com/jayroring2013" target="_blank" class="text-secondary hover:text-primary">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button data-theme-toggle class="theme-toggle">
+                        <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
+                    </button>
+                    <button data-mobile-menu class="md:hidden theme-toggle">
+                        <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
         
-        // Load series data
-        await loadSeriesDetail(seriesId);
-    });
+        <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
+            <div class="px-4 py-4 space-y-4">
+                <a href="index.html" class="nav-link block">Home</a>
+                <a href="dashboard.html" class="nav-link block">Dashboard</a>
+                <a href="content-detail.html" class="nav-link block">Content</a>
+                <a href="reports.html" class="nav-link block">Reports</a>
+            </div>
+        </div>
+    </nav>
 
-    async function loadSeriesDetail(seriesId) {
-        const { data: series, error } = await api.getSeriesById(seriesId);
-        
-        if (error || !series) {
-            alert('Series not found');
-            window.location.href = 'dashboard.html';
-            return;
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-20">
+                <i data-lucide="loader-2" class="w-10 h-10 text-primary-500 animate-spin mx-auto"></i>
+                <p class="text-secondary mt-4">Loading content...</p>
+            </div>
+            
+            <!-- Content Detail -->
+            <div id="contentDetail" class="hidden">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Cover Image -->
+                    <div class="lg:w-1/3">
+                        <div class="glass rounded-xl overflow-hidden">
+                            <img id="seriesCover" src="" alt="" class="w-full h-auto">
+                        </div>
+                    </div>
+                    
+                    <!-- Info -->
+                    <div class="lg:w-2/3">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span id="seriesType" class="px-3 py-1 bg-primary-500/20 text-primary-500 rounded-full text-sm font-medium"></span>
+                            <span id="seriesStatus" class="px-3 py-1 bg-green-500/20 text-green-500 rounded-full text-sm font-medium"></span>
+                        </div>
+                        
+                        <h1 id="seriesTitle" class="text-3xl font-bold text-primary mb-4"></h1>
+                        
+                        <div class="flex items-center gap-6 mb-6 text-secondary">
+                            <span><i data-lucide="star" class="w-4 h-4 inline mr-1 text-yellow-500"></i> <span id="seriesScore">--</span></span>
+                            <span><i data-lucide="heart" class="w-4 h-4 inline mr-1 text-green-500"></i> <span id="seriesVotes">0</span> votes</span>
+                            <span><i data-lucide="eye" class="w-4 h-4 inline mr-1 text-blue-500"></i> <span id="seriesViews">0</span> views</span>
+                        </div>
+                        
+                        <p id="seriesDescription" class="text-secondary mb-6"></p>
+                        
+                        <div class="flex gap-4">
+                            <button id="voteBtn" class="btn-primary flex items-center space-x-2">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                                <span>Vote</span>
+                            </button>
+                            <button class="btn-secondary flex items-center space-x-2">
+                                <i data-lucide="share-2" class="w-5 h-5"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="grid md:grid-cols-2 gap-6 mt-8">
+                    <div class="glass p-6">
+                        <h3 class="text-lg font-semibold text-primary mb-4">Vote History</h3>
+                        <canvas id="voteChart" height="200"></canvas>
+                    </div>
+                    <div class="glass p-6">
+                        <h3 class="text-lg font-semibold text-primary mb-4">Popularity Over Time</h3>
+                        <canvas id="popularityChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error State -->
+            <div id="errorState" class="text-center py-20 hidden">
+                <i data-lucide="alert-circle" class="w-10 h-10 text-red-500 mx-auto"></i>
+                <p class="text-secondary mt-4">Content not found</p>
+                <a href="dashboard.html" class="btn-primary inline-block mt-4">Back to Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-custom py-8 px-4 bg-secondary">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-muted text-sm">© 2013-2026 LiDex. Built by Jay Roring.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/nav.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const seriesId = urlParams.get('id');
+            
+            if (!seriesId) {
+                showError();
+                return;
+            }
+            
+            await loadSeriesDetail(seriesId);
+        });
+
+        async function loadSeriesDetail(seriesId) {
+            try {
+                const { data: series, error } = await api.getSeriesById(seriesId);
+                
+                if (error || !series) {
+                    showError();
+                    return;
+                }
+                
+                displaySeries(series);
+            } catch (err) {
+                console.error('Failed to load series:', err);
+                showError();
+            }
         }
-        
-        // Update page title
-        document.title = `${series.title} - LiDex Analytics`;
-        
-        // Update header with series info
-        // (Update the DOM elements with series data)
-        
-        // Load vote statistics
-        const { data: votes } = await api.getVoteStats({ seriesId });
-        
-        // Update charts with real data
-        updateCharts(series, votes);
-    }
 
-    // Vote button handler
-    async function submitVote(seriesId) {
-        const { data, error } = await api.submitVote({ seriesId });
-        
-        if (error) {
-            alert('Failed to submit vote. Please try again.');
-            return;
+        function displaySeries(series) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('contentDetail').classList.remove('hidden');
+            
+            document.title = `${series.title} - LiDex Analytics`;
+            document.getElementById('seriesTitle').textContent = series.title;
+            document.getElementById('seriesType').textContent = series.item_type || 'Series';
+            document.getElementById('seriesStatus').textContent = series.status || 'Ongoing';
+            document.getElementById('seriesScore').textContent = series.score || 'N/A';
+            document.getElementById('seriesVotes').textContent = series.vote_count || 0;
+            document.getElementById('seriesViews').textContent = series.view_count || 0;
+            document.getElementById('seriesDescription').textContent = series.description || 'No description available.';
+            
+            if (series.cover_url) {
+                document.getElementById('seriesCover').src = series.cover_url;
+            } else {
+                document.getElementById('seriesCover').parentElement.innerHTML = `
+                    <div class="w-full h-96 bg-gradient-to-br from-primary-600 to-purple-700 flex items-center justify-center">
+                        <i data-lucide="image" class="w-16 h-16 text-white/50"></i>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+            
+            document.getElementById('voteBtn').addEventListener('click', () => submitVote(series.id));
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+            const tickColor = isDark ? '#94a3b8' : '#64748b';
+            
+            new Chart(document.getElementById('voteChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Votes',
+                        data: [12, 19, 15, 25],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { grid: { color: gridColor }, ticks: { color: tickColor } },
+                        x: { grid: { display: false }, ticks: { color: tickColor } }
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('popularityChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Rank',
+                        data: [150, 120, 95, 80, 65, 50],
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { grid: { color: gridColor }, ticks: { color: tickColor } },
+                        x: { grid: { display: false }, ticks: { color: tickColor } }
+                    }
+                }
+            });
         }
-        
-        alert('Vote submitted successfully!');
-        // Refresh the page to show updated stats
-        location.reload();
-    }
 
-    function updateCharts(series, votes) {
-        // Update charts with real data from database
-        // Similar to before but using actual vote data
-    }
-</script>
+        async function submitVote(seriesId) {
+            try {
+                const { error } = await api.submitVote({ seriesId });
+                if (error) throw error;
+                alert('Vote submitted successfully!');
+                location.reload();
+            } catch (err) {
+                alert('Failed to submit vote. Please try again.');
+            }
+        }
+
+        function showError() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
