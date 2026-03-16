@@ -1,12 +1,9 @@
 /* ============================================
    LiDex Analytics - Shared Styles
    Version: 1.0
-   Last Updated: March 16, 2026
    ============================================ */
 
-/* --- CSS Variables for Theme --- */
 :root {
-    /* Light Mode (Default) */
     --bg-primary: #f8fafc;
     --bg-secondary: #f1f5f9;
     --bg-card: rgba(255, 255, 255, 0.8);
@@ -21,7 +18,6 @@
 }
 
 .dark {
-    /* Dark Mode */
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
     --bg-card: rgba(30, 41, 59, 0.7);
@@ -35,12 +31,7 @@
     --hover-bg: #334155;
 }
 
-/* --- Base Styles --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'Inter', sans-serif;
@@ -50,17 +41,9 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Typography --- */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    line-height: 1.2;
-}
+h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.2; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
 
-.font-mono {
-    font-family: 'JetBrains Mono', monospace;
-}
-
-/* --- Gradient Text --- */
 .gradient-text {
     background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
     background-size: 200% 200%;
@@ -76,7 +59,6 @@ h1, h2, h3, h4, h5, h6 {
     100% { background-position: 0% 50%; }
 }
 
-/* --- Glass Effect Cards --- */
 .glass {
     background: var(--bg-card);
     backdrop-filter: blur(10px);
@@ -84,36 +66,18 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 0.75rem;
 }
 
-/* --- Custom Scrollbar --- */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6366f1; }
 
-::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #6366f1;
-}
-
-/* --- Navigation --- */
 .nav-link {
     position: relative;
     color: var(--text-secondary);
     transition: color 0.3s ease;
 }
 
-.nav-link:hover,
-.nav-link.active {
-    color: var(--text-primary);
-}
+.nav-link:hover, .nav-link.active { color: var(--text-primary); }
 
 .nav-link::after {
     content: '';
@@ -126,21 +90,11 @@ h1, h2, h3, h4, h5, h6 {
     transition: width 0.3s ease;
 }
 
-.nav-link:hover::after,
-.nav-link.active::after {
-    width: 100%;
-}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
-/* --- Cards & Hover Effects --- */
-.stat-card {
-    transition: all 0.3s ease;
-}
+.stat-card { transition: all 0.3s ease; }
+.stat-card:hover { transform: translateY(-4px); }
 
-.stat-card:hover {
-    transform: translateY(-4px);
-}
-
-/* --- Buttons --- */
 .btn-primary {
     background: #6366f1;
     color: white;
@@ -150,9 +104,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: background 0.3s ease;
 }
 
-.btn-primary:hover {
-    background: #4f46e5;
-}
+.btn-primary:hover { background: #4f46e5; }
 
 .btn-secondary {
     background: var(--input-bg);
@@ -164,11 +116,8 @@ h1, h2, h3, h4, h5, h6 {
     transition: background 0.3s ease;
 }
 
-.btn-secondary:hover {
-    background: var(--hover-bg);
-}
+.btn-secondary:hover { background: var(--hover-bg); }
 
-/* --- Inputs & Forms --- */
 .input-field {
     background: var(--input-bg);
     border: 1px solid var(--border-color);
@@ -178,24 +127,11 @@ h1, h2, h3, h4, h5, h6 {
     transition: border-color 0.3s ease;
 }
 
-.input-field:focus {
-    outline: none;
-    border-color: #6366f1;
-}
+.input-field:focus { outline: none; border-color: #6366f1; }
 
-/* --- Tables --- */
-.table-container {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: var(--bg-secondary);
-}
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--bg-secondary); }
 
 th {
     padding: 0.75rem 1.5rem;
@@ -212,40 +148,25 @@ td {
     color: var(--text-primary);
 }
 
-tr:hover {
-    background: var(--hover-bg);
-}
+tr:hover { background: var(--hover-bg); }
 
-/* --- Animations --- */
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
+.animate-fade-in { animation: fadeIn 0.5s ease-out; }
+.animate-slide-up { animation: slideUp 0.5s ease-out; }
 
-.animate-slide-up {
-    animation: slideUp 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
+@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
 
 @keyframes slideUp {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Utility Classes --- */
 .text-muted { color: var(--text-muted); }
 .text-secondary { color: var(--text-secondary); }
 .text-primary { color: var(--text-primary); }
-
 .bg-primary { background-color: var(--bg-primary); }
 .bg-secondary { background-color: var(--bg-secondary); }
-
 .border-custom { border-color: var(--border-color); }
 
-/* --- Theme Toggle Button --- */
 .theme-toggle {
     padding: 0.5rem;
     border-radius: 0.5rem;
@@ -255,11 +176,8 @@ tr:hover {
     transition: background 0.3s ease;
 }
 
-.theme-toggle:hover {
-    background: var(--hover-bg);
-}
+.theme-toggle:hover { background: var(--hover-bg); }
 
-/* --- Responsive Breakpoints --- */
 @media (max-width: 768px) {
     .mobile-hide { display: none; }
     .mobile-show { display: block; }
