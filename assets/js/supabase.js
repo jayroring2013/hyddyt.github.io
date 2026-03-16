@@ -3,7 +3,8 @@
  */
 
 // Import config (generated during deploy)
-const { SUPABASE_URL, SUPABASE_ANON_KEY } = SUPABASE_CONFIG;
+const SUPABASE_URL = SUPABASE_CONFIG.url;
+const SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey;
 
 // Create Supabase client
 const { createClient } = supabase;
@@ -16,7 +17,8 @@ async function checkSupabaseConnection() {
     try {
         const { error } = await db.from('series').select('count', { count: 'exact', head: true });
         if (error) throw error;
-        console.log('✅ Supabase connected');
+        console.log('✅ Supabase connected successfully');
+        console.log('📊 URL:', SUPABASE_URL.substring(0, 25) + '...');
         return true;
     } catch (error) {
         console.error('❌ Supabase connection failed:', error);
