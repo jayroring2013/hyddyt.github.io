@@ -4,26 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiDex - Light Novel, Anime & Manga Analytics</title>
-    <meta name="description" content="A personal project tracking and analyzing data for Light Novels, Anime, and Manga.">
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS (CDN for GitHub Pages) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Shared Styles -->
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="assets/css/styles.css">
     
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -47,11 +39,10 @@
 </head>
 <body class="bg-light-900 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen">
     
-    <!-- Navigation (Shared Structure) -->
+    <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-custom">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
                         <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
@@ -59,7 +50,6 @@
                     <span class="text-xl font-bold gradient-text">LiDex</span>
                 </a>
                 
-                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="dashboard.html" class="nav-link">Dashboard</a>
@@ -70,21 +60,14 @@
                     </a>
                 </div>
                 
-                <!-- Right Side -->
                 <div class="flex items-center space-x-4">
-                    <!-- Search (Desktop) -->
                     <div class="relative hidden lg:block">
                         <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"></i>
-                        <input type="text" placeholder="Search..." 
-                            class="input-field pl-10 pr-4 py-2 text-sm w-56">
+                        <input type="text" id="searchInput" placeholder="Search series..." class="input-field pl-10 pr-4 py-2 text-sm w-56">
                     </div>
-                    
-                    <!-- Theme Toggle -->
                     <button data-theme-toggle class="theme-toggle">
                         <i data-lucide="moon" class="w-5 h-5 text-secondary"></i>
                     </button>
-                    
-                    <!-- Mobile Menu Button -->
                     <button data-mobile-menu class="md:hidden theme-toggle">
                         <i data-lucide="menu" class="w-5 h-5 text-secondary"></i>
                     </button>
@@ -92,7 +75,6 @@
             </div>
         </div>
         
-        <!-- Mobile Menu (Hidden by default) -->
         <div data-mobile-menu-content class="hidden md:hidden glass border-t border-custom">
             <div class="px-4 py-4 space-y-4">
                 <a href="index.html" class="nav-link block">Home</a>
@@ -117,7 +99,7 @@
                 </h1>
                 
                 <p class="text-lg text-secondary max-w-2xl mx-auto mb-10">
-                    This is a community-driven data project I built to track popularity trends, 
+                    Community-driven data project tracking popularity trends, 
                     voting patterns, and analytics for LN/Anime/Manga.
                 </p>
                 
@@ -133,21 +115,21 @@
                 </div>
             </div>
             
-            <!-- Stats Overview -->
+            <!-- Stats Overview (Dynamic) -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 animate-slide-up">
                 <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-primary-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="book-open" class="w-6 h-6 text-primary-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-primary mb-1">15,847</div>
-                    <div class="text-sm text-secondary">Light Novels</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1" id="statSeries">--</div>
+                    <div class="text-sm text-secondary">Total Series</div>
                 </div>
                 
                 <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="tv" class="w-6 h-6 text-purple-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-primary mb-1">8,234</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1" id="statAnime">--</div>
                     <div class="text-sm text-secondary">Anime Titles</div>
                 </div>
                 
@@ -155,22 +137,56 @@
                     <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="book" class="w-6 h-6 text-pink-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-primary mb-1">23,156</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1" id="statManga">--</div>
                     <div class="text-sm text-secondary">Manga Series</div>
                 </div>
                 
                 <div class="stat-card glass p-6 text-center">
                     <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="users" class="w-6 h-6 text-green-500"></i>
+                        <i data-lucide="heart" class="w-6 h-6 text-green-500"></i>
                     </div>
-                    <div class="text-3xl font-bold font-mono text-primary mb-1">1,247</div>
-                    <div class="text-sm text-secondary">Community Members</div>
+                    <div class="text-3xl font-bold font-mono text-primary mb-1" id="statVotes">--</div>
+                    <div class="text-sm text-secondary">Total Votes</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer (Shared Structure) -->
+    <!-- Trending Section (Dynamic) -->
+    <section class="py-20 px-4 bg-secondary">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-primary mb-2">Trending This Week</h2>
+                    <p class="text-secondary">Based on community votes and views</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-medium">Week</button>
+                    <button class="px-4 py-2 glass text-secondary rounded-lg text-sm font-medium hover:text-primary">Month</button>
+                    <button class="px-4 py-2 glass text-secondary rounded-lg text-sm font-medium hover:text-primary">All Time</button>
+                </div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="trendingLoading" class="text-center py-12">
+                <i data-lucide="loader-2" class="w-8 h-8 text-primary-500 animate-spin mx-auto"></i>
+                <p class="text-secondary mt-4">Loading trending content...</p>
+            </div>
+            
+            <!-- Trending Cards (Dynamic) -->
+            <div id="trendingCards" class="grid md:grid-cols-3 gap-6 hidden">
+                <!-- Cards will be inserted by JavaScript -->
+            </div>
+            
+            <!-- Error State -->
+            <div id="trendingError" class="text-center py-12 hidden">
+                <i data-lucide="alert-circle" class="w-8 h-8 text-red-500 mx-auto mb-4"></i>
+                <p class="text-secondary">Failed to load trending content</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="border-t border-custom py-12 px-4 bg-secondary">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
@@ -181,9 +197,7 @@
                         </div>
                         <span class="text-xl font-bold gradient-text">LiDex</span>
                     </div>
-                    <p class="text-secondary text-sm">
-                        A personal project tracking LN/Anime/Manga data since 2013.
-                    </p>
+                    <p class="text-secondary text-sm">A personal project tracking LN/Anime/Manga data since 2013.</p>
                 </div>
                 
                 <div>
@@ -222,25 +236,120 @@
             </div>
             
             <div class="border-t border-custom pt-8 flex flex-col md:flex-row items-center justify-between">
-                <p class="text-muted text-sm mb-4 md:mb-0">
-                    © 2013-2026 LiDex. Built by Jay Roring.
-                </p>
-                <p class="text-muted text-sm">
-                    Data updated: <span class="font-mono">March 16, 2026</span>
-                </p>
+                <p class="text-muted text-sm mb-4 md:mb-0">© 2013-2026 LiDex. Built by Jay Roring.</p>
+                <p class="text-muted text-sm">Data updated: <span class="font-mono" id="lastUpdated">--</span></p>
             </div>
         </div>
     </footer>
 
-    <!-- Shared Scripts (Load AFTER DOM content) -->
+    <!-- Scripts -->
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/api.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/nav.js"></script>
-    
-    <!-- Page-Specific Scripts -->
     <script>
-        // Initialize Lucide icons after theme system loads
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
+            
+            // Load site statistics
+            await loadSiteStats();
+            
+            // Load trending content
+            await loadTrendingContent();
+            
+            // Set last updated timestamp
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        });
+
+        // Load site statistics from database
+        async function loadSiteStats() {
+            try {
+                const stats = await api.getSiteStats();
+                document.getElementById('statSeries').textContent = stats.totalSeries.toLocaleString();
+                document.getElementById('statAnime').textContent = stats.totalAnime.toLocaleString();
+                document.getElementById('statManga').textContent = stats.totalManga.toLocaleString();
+                document.getElementById('statVotes').textContent = stats.totalVotes.toLocaleString();
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                // Show fallback values
+                document.getElementById('statSeries').textContent = '0';
+                document.getElementById('statAnime').textContent = '0';
+                document.getElementById('statManga').textContent = '0';
+                document.getElementById('statVotes').textContent = '0';
+            }
+        }
+
+        // Load trending content from database
+        async function loadTrendingContent() {
+            const loadingEl = document.getElementById('trendingLoading');
+            const cardsEl = document.getElementById('trendingCards');
+            const errorEl = document.getElementById('trendingError');
+            
+            try {
+                const { data, error } = await api.getTrendingSeries({ limit: 3 });
+                
+                if (error || !data || data.length === 0) {
+                    throw new Error('No trending data available');
+                }
+                
+                // Hide loading, show cards
+                loadingEl.classList.add('hidden');
+                cardsEl.classList.remove('hidden');
+                
+                // Generate cards
+                cardsEl.innerHTML = data.map(series => `
+                    <div class="glass rounded-xl overflow-hidden stat-card">
+                        <div class="relative h-40 bg-gradient-to-br from-primary-600 to-purple-700">
+                            ${series.cover_url ? 
+                                `<img src="${series.cover_url}" alt="${series.title}" class="w-full h-full object-cover">` : 
+                                ''
+                            }
+                            <div class="absolute top-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs text-white">
+                                <i data-lucide="${series.item_type === 'anime' ? 'tv' : series.item_type === 'manga' ? 'book' : 'book-open'}" 
+                                   class="w-3 h-3 inline mr-1"></i>
+                                ${series.item_type ? series.item_type.charAt(0).toUpperCase() + series.item_type.slice(1) : 'Series'}
+                            </div>
+                            <div class="absolute top-3 right-3 bg-green-500/90 px-2 py-1 rounded text-xs font-mono text-white">
+                                #${series.rank || 'NEW'}
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-primary mb-2">${series.title}</h3>
+                            <div class="flex items-center space-x-3 text-sm text-secondary mb-3">
+                                <span><i data-lucide="star" class="w-3 h-3 inline mr-1 text-yellow-500"></i>${series.score || 'N/A'}</span>
+                                <span><i data-lucide="heart" class="w-3 h-3 inline mr-1 text-green-500"></i>${series.vote_count || 0}</span>
+                                <span><i data-lucide="trending-up" class="w-3 h-3 inline mr-1 text-green-500"></i>+${series.vote_change || 0}%</span>
+                            </div>
+                            <a href="content-detail.html?id=${series.id}" class="text-primary-500 hover:text-primary-600 text-sm font-medium flex items-center">
+                                View Details <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Re-initialize Lucide icons for new content
+                lucide.createIcons();
+                
+            } catch (error) {
+                console.error('Failed to load trending:', error);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput')?.addEventListener('input', async (e) => {
+            const query = e.target.value.trim();
+            if (query.length < 2) return;
+            
+            // You can implement search dropdown or redirect to search page
+            console.log('Searching for:', query);
+            const { data } = await api.getSeries({ search: query, limit: 10 });
+            console.log('Search results:', data);
         });
     </script>
 </body>
